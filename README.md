@@ -1,5 +1,7 @@
 # Knight-Owl-Dev Tap
 
+[![Homebrew](https://img.shields.io/badge/install-homebrew-brightgreen)](https://brew.sh)
+
 ## How do I install these formulae?
 
 `brew install knight-owl-dev/tap/<formula>`
