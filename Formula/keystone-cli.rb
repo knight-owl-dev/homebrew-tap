@@ -1,5 +1,5 @@
 class KeystoneCli < Formula
-  desc "A command-line interface for Keystone"
+  desc "Command-line interface for Keystone"
   homepage "https://github.com/Knight-Owl-Dev/keystone-cli"
   version "0.1.0"
   license "MIT"
