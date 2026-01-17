@@ -30,4 +30,5 @@ brew audit --strict --online Formula/keystone-cli.rb
 ## CI/CD
 
 - **tests.yml**: Runs `brew test-bot` on PRs and pushes to main (Ubuntu, Intel Mac, ARM Mac)
-- **publish.yml**: Auto-merges bottles when PR is labeled `pr-pull`
+
+Note: There is no bottle publishing workflow. Formulas in this tap download pre-built binaries directly from releases, so bottling would be redundant.
