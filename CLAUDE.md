@@ -36,3 +36,4 @@ Note: There is no bottle publishing workflow. Formulas in this tap download pre-
 ## Claude Commands
 
 - **/formula-sync**: Check all formulas against their latest GitHub releases, report which need updates, and interactively update selected formulas with proper testing and individual commits.
+- **/pr-create**: Create a pull request from the current branch with an auto-generated title and body based on commits and changes.
