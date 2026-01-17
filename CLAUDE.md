@@ -1,0 +1,33 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Repository Purpose
+
+This is a Homebrew tap for Knight-Owl-Dev packages. Formulae are located in the `Formula/` directory.
+
+## Common Commands
+
+```bash
+# Validate formula syntax
+brew test-bot --only-tap-syntax
+
+# Test a formula locally (downloads, builds, runs test block)
+brew install --build-from-source Formula/keystone-cli.rb
+brew test keystone-cli
+
+# Audit a formula for style issues
+brew audit --strict --online Formula/keystone-cli.rb
+```
+
+## Adding or Updating a Formula
+
+1. Create/edit the Ruby formula in `Formula/<name>.rb`
+2. Update `url`, `version`, and `sha256` for each platform/architecture variant
+3. Run `brew audit --strict --online Formula/<name>.rb` to check for issues
+4. Test installation with `brew install --build-from-source Formula/<name>.rb`
+
+## CI/CD
+
+- **tests.yml**: Runs `brew test-bot` on PRs and pushes to main (Ubuntu, Intel Mac, ARM Mac)
+- **publish.yml**: Auto-merges bottles when PR is labeled `pr-pull`
