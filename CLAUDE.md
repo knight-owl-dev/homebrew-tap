@@ -32,3 +32,7 @@ brew audit --strict --online Formula/keystone-cli.rb
 - **tests.yml**: Runs `brew test-bot` on PRs and pushes to main (Ubuntu, Intel Mac, ARM Mac)
 
 Note: There is no bottle publishing workflow. Formulas in this tap download pre-built binaries directly from releases, so bottling would be redundant.
+
+## Claude Commands
+
+- **/formula-sync**: Check all formulas against their latest GitHub releases, report which need updates, and interactively update selected formulas with proper testing and individual commits.
