@@ -96,8 +96,13 @@ For each formula the user confirmed to update:
    - Update each `url` to point to new release assets
    - Update each `sha256` with corresponding checksums
 
-3. Test the formula:
-   - `brew install --build-from-source Formula/<name>.rb`
+3. Ask the user whether to test locally or skip testing:
+   - Use AskUserQuestion with options:
+     - "Test locally" - warn that this will reinstall the formula from the tap, affecting their current installation
+     - "Skip testing and show diff" - just show the changes without testing (CI will test on PR)
+
+   If user chooses to test locally:
+   - `brew install --build-from-source <tap>/<name>` (use the tap path, not the file path)
    - `brew test <name>`
 
 4. Show the user what changed (git diff) and ask for confirmation before committing
