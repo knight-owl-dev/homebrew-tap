@@ -2,17 +2,30 @@
 
 [![Homebrew](https://img.shields.io/badge/install-homebrew-brightgreen)](https://brew.sh)
 
-## How do I install these formulae?
+## Available Formulae
 
-`brew install knight-owl-dev/tap/<formula>`
+| Formula                                                          | Description                         |
+|------------------------------------------------------------------|-------------------------------------|
+| [`keystone-cli`](https://github.com/Knight-Owl-Dev/keystone-cli) | Command-line interface for Keystone |
 
-Or `brew tap knight-owl-dev/tap` and then `brew install <formula>`.
+## Installation
 
-Or, in a `brew bundle` `Brewfile`:
+```bash
+brew install knight-owl-dev/tap/keystone-cli
+```
+
+Or tap first, then install:
+
+```bash
+brew tap knight-owl-dev/tap
+brew install keystone-cli
+```
+
+Or in a `Brewfile`:
 
 ```ruby
 tap "knight-owl-dev/tap"
-brew "<formula>"
+brew "keystone-cli"
 ```
 
 ## Maintaining this tap
