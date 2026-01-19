@@ -25,13 +25,14 @@ class KeystoneCli < Formula
   end
 
   def install
-    # Keep the binary and appsettings together, then expose the command via a wrapper in bin/.
+    # Keep the binary and config together in libexec, expose via wrapper in bin/
     libexec.install "keystone-cli"
     libexec.install "appsettings.json"
 
     bin.write_exec_script libexec/"keystone-cli"
 
     man1.install "keystone-cli.1"
+    pkgshare.install "LICENSE"
   end
 
   test do
