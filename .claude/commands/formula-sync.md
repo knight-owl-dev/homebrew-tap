@@ -88,7 +88,7 @@ For each formula the user confirmed to update:
 
 1. Get SHA256 checksums - prefer `checksums.txt` from release if available:
    - `gh release download <tag> --repo <repo> --pattern "checksums.txt" --output -`
-   - Parse format: `<filename>  <sha256>` (filename first, then sha256)
+   - Parse format: `<sha256>  <filename>` (GNU coreutils format, compatible with `sha256sum -c`)
    - If no checksums.txt found, warn the user that the release is missing checksums.txt and recommend adding one to future releases for efficiency. Then fall back to downloading each tarball and computing: `curl -sL <url> | shasum -a 256`
 
 2. Update the formula file:
