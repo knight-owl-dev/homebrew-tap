@@ -88,7 +88,7 @@ For each formula the user confirmed to update:
 
 1. Get SHA256 checksums - prefer `checksums.txt` from release if available:
    - `gh release download <tag> --repo <repo> --pattern "checksums.txt" --output -`
-   - Parse format: `<sha256>  <optional-path/>filename.tar.gz` (extract just the filename, ignore any directory prefix)
+   - Parse format: `<filename>  <sha256>` (filename first, then sha256)
    - If no checksums.txt found, warn the user that the release is missing checksums.txt and recommend adding one to future releases for efficiency. Then fall back to downloading each tarball and computing: `curl -sL <url> | shasum -a 256`
 
 2. Update the formula file:
@@ -102,8 +102,8 @@ For each formula the user confirmed to update:
      - "Skip testing and show diff" - just show the changes without testing (CI will test on PR)
 
    If user chooses to test locally:
-   - `brew install --build-from-source <tap>/<name>` (use the tap path, not the file path)
-   - `brew test <name>`
+   - `brew install --build-from-source knight-owl-dev/tap/<formula>`
+   - `brew test <formula>`
 
 4. Show the user what changed (git diff) and ask for confirmation before committing
 
