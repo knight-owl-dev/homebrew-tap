@@ -28,11 +28,16 @@ tap "knight-owl-dev/tap"
 brew "keystone-cli"
 ```
 
-## Maintaining this tap
+## Releasing Updates
 
-This repository includes [Claude Code](https://claude.ai/code) integration. Run `/formula-sync` to check for outdated formulas and update them interactively.
+This repository uses [Claude Code](https://claude.ai/code) to streamline formula updates.
 
-For manual updates, see [.claude/commands/formula-sync.md](.claude/commands/formula-sync.md) for the detailed process.
+1. Run `/formula-sync` in Claude Code to check for new releases
+2. Follow the prompts to update formulas (downloads checksums, runs tests)
+3. Create a PR with `/pr-create`
+4. Squash and merge the PR once CI passes
+
+For manual updates, see [.claude/commands/formula-sync.md](.claude/commands/formula-sync.md).
 
 ## Documentation
 
