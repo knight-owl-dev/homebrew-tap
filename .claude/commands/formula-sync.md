@@ -102,8 +102,8 @@ For each formula the user confirmed to update:
      - "Skip testing and show diff" - just show the changes without testing (CI will test on PR)
 
    If user chooses to test locally:
-   - `brew install --build-from-source <tap>/<name>` (use the tap path, not the file path)
-   - `brew test <name>`
+   - `brew install --build-from-source knight-owl-dev/tap/<formula>`
+   - `brew test <formula>`
 
 4. Show the user what changed (git diff) and ask for confirmation before committing
 
