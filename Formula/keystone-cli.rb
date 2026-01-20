@@ -1,26 +1,26 @@
 class KeystoneCli < Formula
   desc "Command-line interface for Keystone"
   homepage "https://github.com/Knight-Owl-Dev/keystone-cli"
-  version "0.1.8"
+  version "0.1.9"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.8/keystone-cli_0.1.8_osx-arm64.tar.gz"
-      sha256 "259d8a36c328e8175e2f791c98ddbdff580974848733814932e963ddc9e4d388"
+      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.9/keystone-cli_0.1.9_osx-arm64.tar.gz"
+      sha256 "5acb67f220135c72bd6347ae19e0dbf40c078c3821d2c0b638914e255d9210b7"
     else
-      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.8/keystone-cli_0.1.8_osx-x64.tar.gz"
-      sha256 "67cbef21d1ac43fcf2131f7604173ec6e1fcdc840643772f3c77607f57e4ce6f"
+      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.9/keystone-cli_0.1.9_osx-x64.tar.gz"
+      sha256 "4a9fc64d5e8a530b652656f0977749f67f2b0d5b0e84406f494694c4919bcd95"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.8/keystone-cli_0.1.8_linux-arm64.tar.gz"
-      sha256 "5dd4f8b2d3851729a74dfb31742d4148b1b913d37b0e1d4a84a1849b17a5fe59"
+      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.9/keystone-cli_0.1.9_linux-arm64.tar.gz"
+      sha256 "a455bb4c1ade1f0e384c689fc22105ebeeb01448faa78b1fd3bf9400acec3b29"
     else
-      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.8/keystone-cli_0.1.8_linux-x64.tar.gz"
-      sha256 "6579354dc119525eacce1a8ad8a7da150476ff58f541487f492f1e3e494e0a6e"
+      url "https://github.com/Knight-Owl-Dev/keystone-cli/releases/download/v0.1.9/keystone-cli_0.1.9_linux-x64.tar.gz"
+      sha256 "275f8d6c336da51e3e765d05343c8de7fcecfd8ceaae2f6a6fca4628d83376ab"
     end
   end
 
