@@ -27,6 +27,18 @@ brew audit --strict --online Formula/keystone-cli.rb
 3. Run `brew audit --strict --online Formula/<name>.rb` to check for issues
 4. Test installation with `brew install --build-from-source Formula/<name>.rb`
 
+## Local Development
+
+To test formula changes locally, use the dev-tap script to point Homebrew at your local checkout:
+
+```bash
+./scripts/dev-tap.sh enable   # Point tap to local repo, enable dev mode
+./scripts/dev-tap.sh disable  # Restore original tap, disable dev mode
+./scripts/dev-tap.sh status   # Check current tap configuration
+```
+
+While enabled, run `brew reinstall --build-from-source keystone-cli` to test changes.
+
 ## CI/CD
 
 - **tests.yml**: Runs `brew test-bot` on PRs and pushes to main (Ubuntu, Intel Mac, ARM Mac)
