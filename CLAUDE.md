@@ -4,7 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This is a Homebrew tap for Knight-Owl-Dev packages. Formulae are located in the `Formula/` directory.
+This is a Homebrew tap for Knight-Owl-Dev packages.
+
+- `Formula/` - Homebrew formula files (static logic)
+- `Manifests/` - Auto-generated version and checksum data
+- `scripts/` - Development and automation scripts
+- `docs/how-to/` - Guides for common tasks
 
 ## Common Commands
 
@@ -22,10 +27,16 @@ brew audit --strict --online Formula/keystone-cli.rb
 
 ## Adding or Updating a Formula
 
-1. Create/edit the Ruby formula in `Formula/<name>.rb`
-2. Update `url`, `version`, and `sha256` for each platform/architecture variant
-3. Run `brew audit --strict --online Formula/<name>.rb` to check for issues
-4. Test installation with `brew install --build-from-source Formula/<name>.rb`
+Formulas use a manifest-based structure where version and checksums are stored in `Manifests/<name>.rb` and the formula logic is in `Formula/<name>.rb`.
+
+- **Adding a new formula**: See [docs/how-to/add-formula.md](docs/how-to/add-formula.md)
+- **Updating to a new version**: See [docs/how-to/sync-formula.md](docs/how-to/sync-formula.md)
+
+Quick update command:
+
+```bash
+./scripts/update-formula.sh <formula-name> <version>
+```
 
 ## Local Development
 
