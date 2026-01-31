@@ -10,22 +10,22 @@ class KeystoneCli < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'osx-arm64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "osx-arm64")}"
       sha256 SHA256["osx-arm64"]
     end
     on_intel do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'osx-x64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "osx-x64")}"
       sha256 SHA256["osx-x64"]
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'linux-arm64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "linux-arm64")}"
       sha256 SHA256["linux-arm64"]
     end
     on_intel do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'linux-x64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "linux-x64")}"
       sha256 SHA256["linux-x64"]
     end
   end

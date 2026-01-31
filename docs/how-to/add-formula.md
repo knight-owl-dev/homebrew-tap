@@ -14,20 +14,22 @@ This guide walks through adding a new formula to the tap using the manifest-base
 Create `Manifests/<formula-name>.rb`:
 
 ```ruby
+# frozen_string_literal: true
+
 # AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
 # Update with: scripts/update-formula.sh <formula-name> <version>
 
-module <FormulaName>Manifest
+module ExampleManifest
   VERSION = "<version>"
   REPO = "<org>/<repo>"
   TAG_PREFIX = "v"
-  ASSET_TEMPLATE = "<name>_%{version}_%{platform}.tar.gz"
+  ASSET_TEMPLATE = "<name>_%<version>s_%<platform>s.tar.gz"
 
   SHA256 = {
-    "osx-arm64" => "<sha256>",
-    "osx-x64" => "<sha256>",
+    "osx-arm64"   => "<sha256>",
+    "osx-x64"     => "<sha256>",
     "linux-arm64" => "<sha256>",
-    "linux-x64" => "<sha256>",
+    "linux-x64"   => "<sha256>",
   }.freeze
 end
 ```
@@ -36,17 +38,17 @@ end
 
 - Module name must be PascalCase version of the formula name plus `Manifest` (e.g., `KeystoneCliManifest`)
 - `TAG_PREFIX` is typically `"v"` for tags like `v1.0.0`, or `""` for tags like `1.0.0`
-- `ASSET_TEMPLATE` uses Ruby string formatting with `%{version}` and `%{platform}` placeholders
+- `ASSET_TEMPLATE` uses Ruby `format()` syntax with `%<version>s` and `%<platform>s` placeholders
 
 ## Step 2: Create the Formula
 
 Create `Formula/<formula-name>.rb`:
 
 ```ruby
-require_relative "../Manifests/<formula-name>"
+require_relative "../Manifests/example"
 
-class <FormulaName> < Formula
-  include <FormulaName>Manifest
+class Example < Formula
+  include ExampleManifest
 
   desc "<description>"
   homepage "https://github.com/#{REPO}"
@@ -55,22 +57,22 @@ class <FormulaName> < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'osx-arm64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "osx-arm64")}"
       sha256 SHA256["osx-arm64"]
     end
     on_intel do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'osx-x64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "osx-x64")}"
       sha256 SHA256["osx-x64"]
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'linux-arm64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "linux-arm64")}"
       sha256 SHA256["linux-arm64"]
     end
     on_intel do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{ASSET_TEMPLATE % {version: VERSION, platform: 'linux-x64'}}"
+      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "linux-x64")}"
       sha256 SHA256["linux-x64"]
     end
   end
