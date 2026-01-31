@@ -128,9 +128,9 @@ release workflow:
 
 ```yaml
 - name: Trigger Homebrew tap update
-  uses: peter-evans/repository-dispatch@v3
+  uses: peter-evans/repository-dispatch@v4
   with:
-    token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+    token: ${{ secrets.HOMEBREW_TAP_REPO_TOKEN }}
     repository: knight-owl-dev/homebrew-tap
     event-type: release-published
     client-payload: '{"formulas": "my-formula:${{ needs.release.outputs.version }}"}'
@@ -139,7 +139,7 @@ release workflow:
 Required setup:
 
 1. Create a fine-grained PAT scoped to `knight-owl-dev/homebrew-tap` with **Contents: Read and write**
-2. Add the PAT as a secret (e.g., `HOMEBREW_TAP_TOKEN`) in your package's repository
+2. Add the PAT as a secret (e.g., `HOMEBREW_TAP_REPO_TOKEN`) in your package's repository
 
 You can also trigger manually via the `gh` CLI:
 
