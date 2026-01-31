@@ -1,0 +1,4 @@
+# Disable info-level warnings that are acceptable in our scripts
+# SC2310: Function in || condition disables set -e (intentional pattern)
+# SC2312: Command substitution in here-string (acceptable)
+disable=SC2310,SC2312
