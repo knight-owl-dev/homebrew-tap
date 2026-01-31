@@ -75,7 +75,9 @@ jobs:
           ./scripts/update-formula-many.sh $FORMULAS
 
       - name: Run brew test-bot syntax check
-        run: brew test-bot --only-tap-syntax
+        run: |
+          brew developer on
+          brew test-bot --only-tap-syntax
 
       - name: Create PR with changes
         env:

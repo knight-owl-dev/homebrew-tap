@@ -189,9 +189,9 @@ main() {
     # shellcheck disable=SC2310
     if update_formula "${formula}" "${version}"
     then
-      ((updated++)) || true
+      ((updated += 1))
     else
-      ((failed++)) || true
+      ((failed += 1))
       echo "Failed to update ${formula}"
     fi
     echo ""
