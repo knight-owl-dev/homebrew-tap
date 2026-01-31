@@ -15,7 +15,7 @@ set -e
 
 # Cross-platform sed in-place edit (macOS requires '', Linux doesn't)
 sed_inplace() {
-  if [[ "${OSTYPE}" == "darwin"* ]]
+  if [[ "${OSTYPE}" == darwin* ]]
   then
     sed -i '' "$@"
   else

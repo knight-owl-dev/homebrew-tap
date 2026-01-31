@@ -64,7 +64,9 @@ validate_formula_name() {
   fi
 }
 
-# Validate version string (2-4 numeric segments, optional pre-release suffix)
+# Validate version string.
+# Supports 2-4 numeric segments to match common upstream tag formats
+# (e.g., 1.0, 1.2.3, 1.2.3.4), with optional pre-release suffix like -alpha or -rc.1.
 validate_version() {
   local version="$1"
   if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z.-]+)?$ ]]
