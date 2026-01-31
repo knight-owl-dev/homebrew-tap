@@ -13,13 +13,13 @@ set -euo pipefail
 #   - gh CLI installed and authenticated
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(dirname "$SCRIPT_DIR")"
-MANIFESTS_DIR="$REPO_DIR/Manifests"
+REPO_DIR="$(dirname "${SCRIPT_DIR}")"
+MANIFESTS_DIR="${REPO_DIR}/Manifests"
 
 # Get current version from a manifest file
 get_current_version() {
     local manifest_file="$1"
-    grep -E '^\s*VERSION\s*=' "$manifest_file" | sed 's/.*"\(.*\)".*/\1/'
+    grep -E '^\s*VERSION\s*=' "${manifest_file}" | sed 's/.*"\(.*\)".*/\1/'
 }
 
 # Get latest version from GitHub releases
@@ -27,29 +27,29 @@ get_latest_version() {
     local manifest_file="$1"
     local repo tag_prefix tag_name version
 
-    repo=$(grep -E '^\s*REPO\s*=' "$manifest_file" | sed 's/.*"\(.*\)".*/\1/')
-    tag_prefix=$(grep -E '^\s*TAG_PREFIX\s*=' "$manifest_file" | sed 's/.*"\(.*\)".*/\1/')
+    repo=$(grep -E '^\s*REPO\s*=' "${manifest_file}" | sed 's/.*"\(.*\)".*/\1/')
+    tag_prefix=$(grep -E '^\s*TAG_PREFIX\s*=' "${manifest_file}" | sed 's/.*"\(.*\)".*/\1/')
 
-    if [[ -z "$repo" ]]; then
+    if [[ -z "${repo}" ]]; then
         echo "Error: Could not extract REPO from manifest" >&2
         return 1
     fi
 
-    tag_name=$(gh release view --repo "$repo" --json tagName --jq '.tagName' 2>/dev/null) || {
-        echo "Error: Failed to fetch latest release from $repo" >&2
+    tag_name=$(gh release view --repo "${repo}" --json tagName --jq '.tagName' 2>/dev/null) || {
+        echo "Error: Failed to fetch latest release from ${repo}" >&2
         return 1
     }
 
     # Strip tag prefix to get version
-    version="${tag_name#$tag_prefix}"
-    echo "$version"
+    version="${tag_name#"${tag_prefix}"}"
+    echo "${version}"
 }
 
 # Validate formula name (alphanumeric and hyphens only)
 validate_formula_name() {
     local name="$1"
-    if [[ ! "$name" =~ ^[A-Za-z0-9-]+$ ]]; then
-        echo "Error: Invalid formula name: $name" >&2
+    if [[ ! "${name}" =~ ^[A-Za-z0-9-]+$ ]]; then
+        echo "Error: Invalid formula name: ${name}" >&2
         return 1
     fi
 }
@@ -57,8 +57,8 @@ validate_formula_name() {
 # Validate version string (semver-like: digits and dots)
 validate_version() {
     local version="$1"
-    if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.]+)?$ ]]; then
-        echo "Error: Invalid version format: $version" >&2
+    if [[ ! "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.]+)?$ ]]; then
+        echo "Error: Invalid version format: ${version}" >&2
         return 1
     fi
 }
@@ -68,50 +68,50 @@ parse_spec() {
     local spec="$1"
     local formula version
 
-    if [[ "$spec" == *:* ]]; then
+    if [[ "${spec}" == *:* ]]; then
         formula="${spec%%:*}"
         version="${spec#*:}"
     else
-        formula="$spec"
+        formula="${spec}"
         version=""
     fi
 
-    echo "$formula $version"
+    echo "${formula} ${version}"
 }
 
 # Update a single formula
 update_formula() {
     local formula="$1"
     local version="$2"
-    local manifest_file="$MANIFESTS_DIR/${formula}.rb"
+    local manifest_file="${MANIFESTS_DIR}/${formula}.rb"
 
     # Validate formula exists
-    if [[ ! -f "$manifest_file" ]]; then
-        echo "Error: Manifest not found: $manifest_file"
+    if [[ ! -f "${manifest_file}" ]]; then
+        echo "Error: Manifest not found: ${manifest_file}"
         return 1
     fi
 
     # Get current version
     local current_version
-    current_version=$(get_current_version "$manifest_file")
+    current_version=$(get_current_version "${manifest_file}")
 
     # If no version specified, get latest
-    if [[ -z "$version" ]]; then
-        echo "Fetching latest version for $formula..."
-        version=$(get_latest_version "$manifest_file") || return 1
+    if [[ -z "${version}" ]]; then
+        echo "Fetching latest version for ${formula}..."
+        version=$(get_latest_version "${manifest_file}") || return 1
     fi
 
     # Validate version format
-    validate_version "$version" || return 1
+    validate_version "${version}" || return 1
 
     # Check if already at target version
-    if [[ "$current_version" == "$version" ]]; then
-        echo "✓ $formula is already at version $version"
+    if [[ "${current_version}" == "${version}" ]]; then
+        echo "✓ ${formula} is already at version ${version}"
         return 0
     fi
 
-    echo "Updating $formula: $current_version → $version"
-    "$SCRIPT_DIR/update-formula.sh" "$formula" "$version"
+    echo "Updating ${formula}: ${current_version} → ${version}"
+    "${SCRIPT_DIR}/update-formula.sh" "${formula}" "${version}"
 }
 
 # Main logic
@@ -120,16 +120,16 @@ main() {
 
     if [[ $# -eq 0 ]]; then
         # No arguments: discover all manifests
-        echo "Discovering formulas in $MANIFESTS_DIR..."
-        for manifest in "$MANIFESTS_DIR"/*.rb; do
-            if [[ -f "$manifest" ]]; then
-                formula=$(basename "$manifest" .rb)
-                formulas+=("$formula")
+        echo "Discovering formulas in ${MANIFESTS_DIR}..."
+        for manifest in "${MANIFESTS_DIR}"/*.rb; do
+            if [[ -f "${manifest}" ]]; then
+                formula=$(basename "${manifest}" .rb)
+                formulas+=("${formula}")
             fi
         done
 
         if [[ ${#formulas[@]} -eq 0 ]]; then
-            echo "No manifests found in $MANIFESTS_DIR"
+            echo "No manifests found in ${MANIFESTS_DIR}"
             exit 0
         fi
 
@@ -138,12 +138,12 @@ main() {
     else
         # Arguments provided: parse specs
         for spec in "$@"; do
-            read -r formula version <<< "$(parse_spec "$spec")"
-            validate_formula_name "$formula" || exit 1
-            if [[ -n "$version" ]]; then
-                validate_version "$version" || exit 1
+            read -r formula version <<< "$(parse_spec "${spec}")"
+            validate_formula_name "${formula}" || exit 1
+            if [[ -n "${version}" ]]; then
+                validate_version "${version}" || exit 1
             fi
-            formulas+=("$spec")
+            formulas+=("${spec}")
         done
     fi
 
@@ -152,21 +152,21 @@ main() {
     local failed=0
 
     for spec in "${formulas[@]}"; do
-        read -r formula version <<< "$(parse_spec "$spec")"
+        read -r formula version <<< "$(parse_spec "${spec}")"
         echo "----------------------------------------"
-        if update_formula "$formula" "$version"; then
+        if update_formula "${formula}" "${version}"; then
             ((updated++)) || true
         else
             ((failed++)) || true
-            echo "Failed to update $formula"
+            echo "Failed to update ${formula}"
         fi
         echo ""
     done
 
     echo "========================================"
-    echo "Summary: $updated formula(s) processed, $failed failed"
+    echo "Summary: ${updated} formula(s) processed, ${failed} failed"
 
-    if [[ $failed -gt 0 ]]; then
+    if [[ ${failed} -gt 0 ]]; then
         exit 1
     fi
 }

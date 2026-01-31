@@ -32,7 +32,9 @@ status() {
     fi
 
     echo -n "Developer mode: "
-    if brew developer 2>/dev/null | grep -q "enabled"; then
+    local dev_status
+    dev_status="$(brew developer 2>/dev/null || true)"
+    if echo "${dev_status}" | grep -q "enabled"; then
         echo "enabled"
     else
         echo "disabled"
