@@ -18,8 +18,13 @@ status() {
   if [[ -L "${TAP_DIR}" ]]
   then
     local target
-    target="$(readlink "${TAP_DIR}" || true)"
-    echo "Status: DEVELOPMENT (symlinked to ${target})"
+    target="$(readlink "${TAP_DIR}" 2>/dev/null || true)"
+    if [[ -n "${target}" ]]
+    then
+      echo "Status: DEVELOPMENT (symlinked to ${target})"
+    else
+      echo "Status: DEVELOPMENT (symlink target unreadable)"
+    fi
   elif [[ -d "${TAP_DIR}" ]]
   then
     echo "Status: INSTALLED (normal tap)"

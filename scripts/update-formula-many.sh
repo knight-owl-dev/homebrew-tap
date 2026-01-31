@@ -69,7 +69,7 @@ validate_formula_name() {
 # (e.g., 1.0, 1.2.3, 1.2.3.4), with optional pre-release suffix like -alpha or -rc.1.
 validate_version() {
   local version="$1"
-  if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z.-]+)?$ ]]
+  if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]
   then
     echo "Error: Invalid version format: ${version}" >&2
     return 1
