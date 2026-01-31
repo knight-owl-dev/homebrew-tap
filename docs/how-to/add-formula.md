@@ -104,7 +104,7 @@ Use the update script to populate the SHA256 values:
 ./scripts/update-formula.sh <formula-name> <version>
 ```
 
-This will fail if the manifest has placeholder SHA256 values, so first set them to any valid 64-character hex string, then run the script to update them.
+This will fail if the manifest has placeholder SHA256 values, so first set them to any valid 64-character hex string (e.g., `0000000000000000000000000000000000000000000000000000000000000000`), then run the script to update them with the real checksums.
 
 ## Step 4: Test Locally
 

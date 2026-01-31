@@ -64,10 +64,10 @@ validate_formula_name() {
   fi
 }
 
-# Validate version string (semver-like: digits and dots)
+# Validate version string (2-4 numeric segments, optional pre-release suffix)
 validate_version() {
   local version="$1"
-  if [[ ! "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.]+)?$ ]]
+  if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z.-]+)?$ ]]
   then
     echo "Error: Invalid version format: ${version}" >&2
     return 1

@@ -41,6 +41,6 @@ class KeystoneCli < Formula
   end
 
   test do
-    system bin/"keystone-cli", "info"
+    system bin/"keystone-cli", "--version"
   end
 end
