@@ -127,6 +127,14 @@ git add Manifests/<formula-name>.rb Formula/<formula-name>.rb
 git commit -m "Add <formula-name> formula"
 ```
 
+## After Adding
+
+Once merged, the formula will be automatically updated when new releases are published:
+
+- The `update-formula` workflow discovers all manifests in `Manifests/`
+- When triggered (manually or via `repository_dispatch`), it updates versions and checksums
+- See [sync-formula.md](sync-formula.md) for details on automated updates
+
 ## Example: keystone-cli
 
 See the existing implementation:

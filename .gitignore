@@ -20,3 +20,7 @@ vendor/bundle/
 
 # Homebrew
 *.bottle.tar.gz
+
+# Local artifacts (intermediate files, test output, etc.)
+/artifacts/
+steps_output.txt

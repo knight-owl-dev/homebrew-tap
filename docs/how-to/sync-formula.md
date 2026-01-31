@@ -107,13 +107,58 @@ If a platform is missing from `checksums.txt`, the script will print a warning b
 - Remove that platform from the formula
 - Ask the package maintainer to add the missing binary
 
-## Automated Updates (Future)
+## Automated Updates
 
-A GitHub Actions workflow will automate this process:
+The `update-formula` workflow automates formula updates via GitHub Actions.
 
-1. Upstream repo publishes a new release
-2. Workflow dispatches to this tap
-3. Script updates the manifest
-4. PR created with auto-merge enabled
+### Manual Trigger
 
-See issue #14 for implementation status.
+1. Go to **Actions** > **Update Formula**
+2. Click **Run workflow**
+3. Optionally specify formulas (leave empty for all):
+   - `keystone-cli` — update to latest version
+   - `keystone-cli:0.3.0` — update to specific version
+   - `pkg1 pkg2:1.0.0` — update multiple formulas
+4. The workflow creates a PR with auto-merge enabled
+
+### Automated Trigger
+
+Package release workflows can trigger this via `repository_dispatch`. Add this step to your
+release workflow:
+
+```yaml
+- name: Trigger Homebrew tap update
+  uses: peter-evans/repository-dispatch@v3
+  with:
+    token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+    repository: knight-owl-dev/homebrew-tap
+    event-type: release-published
+    client-payload: '{"formulas": "my-formula:${{ needs.release.outputs.version }}"}'
+```
+
+Required setup:
+
+1. Create a fine-grained PAT scoped to `knight-owl-dev/homebrew-tap` with **Contents: Read and write**
+2. Add the PAT as a secret (e.g., `HOMEBREW_TAP_TOKEN`) in your package's repository
+
+You can also trigger manually via the `gh` CLI:
+
+```bash
+gh api repos/knight-owl-dev/homebrew-tap/dispatches \
+  -f event_type=release-published \
+  -f client_payload='{"formulas": "keystone-cli:0.3.0"}'
+```
+
+### Batch Updates
+
+Update all formulas to their latest versions:
+
+```bash
+./scripts/update-formula-many.sh
+```
+
+Or update specific formulas:
+
+```bash
+./scripts/update-formula-many.sh keystone-cli other-pkg:1.2.0
+```
