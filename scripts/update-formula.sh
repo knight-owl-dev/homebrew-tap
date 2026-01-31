@@ -15,17 +15,19 @@ set -e
 
 # Cross-platform sed in-place edit (macOS requires '', Linux doesn't)
 sed_inplace() {
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "$@"
-    else
-        sed -i "$@"
-    fi
+  if [[ "${OSTYPE}" == "darwin"* ]]
+  then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
 }
 
-if [[ $# -ne 2 ]]; then
-    echo "Usage: $0 <formula-name> <version>"
-    echo "Example: $0 keystone-cli 0.3.0"
-    exit 1
+if [[ $# -ne 2 ]]
+then
+  echo "Usage: $0 <formula-name> <version>"
+  echo "Example: $0 keystone-cli 0.3.0"
+  exit 1
 fi
 
 FORMULA_NAME="$1"
@@ -35,9 +37,10 @@ REPO_DIR="$(dirname "${SCRIPT_DIR}")"
 MANIFEST_FILE="${REPO_DIR}/Manifests/${FORMULA_NAME}.rb"
 
 # Validate manifest exists
-if [[ ! -f "${MANIFEST_FILE}" ]]; then
-    echo "Error: Manifest not found: ${MANIFEST_FILE}"
-    exit 1
+if [[ ! -f "${MANIFEST_FILE}" ]]
+then
+  echo "Error: Manifest not found: ${MANIFEST_FILE}"
+  exit 1
 fi
 
 # Extract REPO and TAG_PREFIX from manifest
@@ -49,9 +52,10 @@ TAG_PREFIX_LINE=$(grep -E '^\s*TAG_PREFIX\s*=' "${MANIFEST_FILE}" || true)
 TAG_PREFIX="${TAG_PREFIX_LINE#*\"}"
 TAG_PREFIX="${TAG_PREFIX%\"*}"
 
-if [[ -z "${REPO}" ]]; then
-    echo "Error: Could not extract REPO from manifest"
-    exit 1
+if [[ -z "${REPO}" ]]
+then
+  echo "Error: Could not extract REPO from manifest"
+  exit 1
 fi
 
 TAG="${TAG_PREFIX}${NEW_VERSION}"
@@ -63,14 +67,15 @@ echo ""
 # Fetch checksums.txt from release
 echo "Fetching checksums.txt from release..."
 CHECKSUMS=$(gh release download "${TAG}" --repo "${REPO}" --pattern "checksums.txt" --output - 2>/dev/null) || {
-    echo "Error: Failed to download checksums.txt from release ${TAG}"
-    echo "Make sure the release exists and includes checksums.txt"
-    exit 1
+  echo "Error: Failed to download checksums.txt from release ${TAG}"
+  echo "Make sure the release exists and includes checksums.txt"
+  exit 1
 }
 
-if [[ -z "${CHECKSUMS}" ]]; then
-    echo "Error: checksums.txt is empty"
-    exit 1
+if [[ -z "${CHECKSUMS}" ]]
+then
+  echo "Error: checksums.txt is empty"
+  exit 1
 fi
 
 echo "Checksums found:"
@@ -81,20 +86,22 @@ echo ""
 # Format: <sha256>  <filename> (two spaces, GNU coreutils format)
 PLATFORMS=("osx-arm64" "osx-x64" "linux-arm64" "linux-x64")
 
-for platform in "${PLATFORMS[@]}"; do
-    # Find checksum for this platform
-    sha_line=$(echo "${CHECKSUMS}" | grep "_${platform}\.tar\.gz" || true)
-    sha=$(echo "${sha_line}" | awk '{print $1}')
+for platform in "${PLATFORMS[@]}"
+do
+  # Find checksum for this platform
+  sha_line=$(echo "${CHECKSUMS}" | grep "_${platform}\.tar\.gz" || true)
+  sha=$(echo "${sha_line}" | awk '{print $1}')
 
-    if [[ -z "${sha}" ]]; then
-        echo "Warning: No checksum found for platform ${platform}"
-        continue
-    fi
+  if [[ -z "${sha}" ]]
+  then
+    echo "Warning: No checksum found for platform ${platform}"
+    continue
+  fi
 
-    echo "Updating ${platform}: ${sha}"
+  echo "Updating ${platform}: ${sha}"
 
-    # Update SHA256 line in manifest (preserve alignment spacing)
-    sed_inplace "s/\(\"${platform}\"[[:space:]]*=>[[:space:]]*\"\)[a-f0-9]\{64\}\"/\1${sha}\"/" "${MANIFEST_FILE}"
+  # Update SHA256 line in manifest (preserve alignment spacing)
+  sed_inplace "s/\(\"${platform}\"[[:space:]]*=>[[:space:]]*\"\)[a-f0-9]\{64\}\"/\1${sha}\"/" "${MANIFEST_FILE}"
 done
 
 # Update VERSION

@@ -102,8 +102,8 @@ jobs:
             UPDATES="$UPDATES$formula to $version"
           done
 
-          # Create branch with run ID and timestamp to avoid collisions
-          BRANCH="auto-update-formula/${GITHUB_RUN_ID}-$(date -u +%Y-%m-%d-%H%M%S)"
+          # Create branch with run ID (globally unique)
+          BRANCH="auto-update-formula/${GITHUB_RUN_ID}"
           git checkout -b "$BRANCH"
 
           # Commit changes

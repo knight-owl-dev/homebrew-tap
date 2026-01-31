@@ -58,6 +58,14 @@ To test formula changes locally, use the dev-tap script to point Homebrew at you
 
 While enabled, run `brew reinstall --build-from-source keystone-cli` to test changes.
 
+## Shell Script Formatting
+
+Always use `brew style --fix` instead of standalone `shfmt` for formatting shell scripts. Homebrew has its own formatting preferences (e.g., `then` on a new line) that differ from shfmt defaults.
+
+```bash
+brew style --fix scripts/
+```
+
 ## CI/CD
 
 - **tests.yml**: Runs `brew test-bot` on PRs and pushes to main (Ubuntu, Intel Mac, ARM Mac)
