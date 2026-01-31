@@ -78,8 +78,8 @@ for platform in "${PLATFORMS[@]}"; do
 
     echo "Updating $platform: $sha"
 
-    # Update SHA256 line in manifest
-    sed -i '' "s/\"${platform}\" => \"[a-f0-9]*\"/\"${platform}\" => \"${sha}\"/" "$MANIFEST_FILE"
+    # Update SHA256 line in manifest (preserve alignment spacing)
+    sed -i '' "s/\(\"${platform}\"[[:space:]]*=>[[:space:]]*\"\)[a-f0-9]\{64\}\"/\1${sha}\"/" "$MANIFEST_FILE"
 done
 
 # Update VERSION
