@@ -1,3 +1,4 @@
+# typed: strict
 # frozen_string_literal: true
 
 # AUTO-GENERATED FILE - DO NOT EDIT MANUALLY

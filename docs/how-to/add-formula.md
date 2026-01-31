@@ -14,6 +14,7 @@ This guide walks through adding a new formula to the tap using the manifest-base
 Create `Manifests/<formula-name>.rb`:
 
 ```ruby
+# typed: strict
 # frozen_string_literal: true
 
 # AUTO-GENERATED FILE - DO NOT EDIT MANUALLY

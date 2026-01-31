@@ -19,16 +19,24 @@ MANIFESTS_DIR="${REPO_DIR}/Manifests"
 # Get current version from a manifest file
 get_current_version() {
     local manifest_file="$1"
-    grep -E '^\s*VERSION\s*=' "${manifest_file}" | sed 's/.*"\(.*\)".*/\1/'
+    local output
+    output=$(grep -E '^\s*VERSION\s*=' "${manifest_file}" || true)
+    output="${output#*\"}"
+    echo "${output%\"*}"
 }
 
 # Get latest version from GitHub releases
 get_latest_version() {
     local manifest_file="$1"
-    local repo tag_prefix tag_name version
+    local repo tag_prefix tag_name version output
 
-    repo=$(grep -E '^\s*REPO\s*=' "${manifest_file}" | sed 's/.*"\(.*\)".*/\1/')
-    tag_prefix=$(grep -E '^\s*TAG_PREFIX\s*=' "${manifest_file}" | sed 's/.*"\(.*\)".*/\1/')
+    output=$(grep -E '^\s*REPO\s*=' "${manifest_file}" || true)
+    repo="${output#*\"}"
+    repo="${repo%\"*}"
+
+    output=$(grep -E '^\s*TAG_PREFIX\s*=' "${manifest_file}" || true)
+    tag_prefix="${output#*\"}"
+    tag_prefix="${tag_prefix%\"*}"
 
     if [[ -z "${repo}" ]]; then
         echo "Error: Could not extract REPO from manifest" >&2
@@ -98,10 +106,12 @@ update_formula() {
     # If no version specified, get latest
     if [[ -z "${version}" ]]; then
         echo "Fetching latest version for ${formula}..."
+        # shellcheck disable=SC2310
         version=$(get_latest_version "${manifest_file}") || return 1
     fi
 
     # Validate version format
+    # shellcheck disable=SC2310
     validate_version "${version}" || return 1
 
     # Check if already at target version
@@ -138,9 +148,13 @@ main() {
     else
         # Arguments provided: parse specs
         for spec in "$@"; do
-            read -r formula version <<< "$(parse_spec "${spec}")"
+            local parsed
+            parsed=$(parse_spec "${spec}")
+            read -r formula version <<< "${parsed}"
+            # shellcheck disable=SC2310
             validate_formula_name "${formula}" || exit 1
             if [[ -n "${version}" ]]; then
+                # shellcheck disable=SC2310
                 validate_version "${version}" || exit 1
             fi
             formulas+=("${spec}")
@@ -152,8 +166,11 @@ main() {
     local failed=0
 
     for spec in "${formulas[@]}"; do
-        read -r formula version <<< "$(parse_spec "${spec}")"
+        local parsed
+        parsed=$(parse_spec "${spec}")
+        read -r formula version <<< "${parsed}"
         echo "----------------------------------------"
+        # shellcheck disable=SC2310
         if update_formula "${formula}" "${version}"; then
             ((updated++)) || true
         else

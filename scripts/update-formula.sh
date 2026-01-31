@@ -13,6 +13,15 @@
 
 set -e
 
+# Cross-platform sed in-place edit (macOS requires '', Linux doesn't)
+sed_inplace() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "$@"
+    else
+        sed -i "$@"
+    fi
+}
+
 if [[ $# -ne 2 ]]; then
     echo "Usage: $0 <formula-name> <version>"
     echo "Example: $0 keystone-cli 0.3.0"
@@ -32,8 +41,13 @@ if [[ ! -f "${MANIFEST_FILE}" ]]; then
 fi
 
 # Extract REPO and TAG_PREFIX from manifest
-REPO=$(grep -E '^\s*REPO\s*=' "${MANIFEST_FILE}" | sed 's/.*"\(.*\)".*/\1/')
-TAG_PREFIX=$(grep -E '^\s*TAG_PREFIX\s*=' "${MANIFEST_FILE}" | sed 's/.*"\(.*\)".*/\1/')
+REPO_LINE=$(grep -E '^\s*REPO\s*=' "${MANIFEST_FILE}" || true)
+REPO="${REPO_LINE#*\"}"
+REPO="${REPO%\"*}"
+
+TAG_PREFIX_LINE=$(grep -E '^\s*TAG_PREFIX\s*=' "${MANIFEST_FILE}" || true)
+TAG_PREFIX="${TAG_PREFIX_LINE#*\"}"
+TAG_PREFIX="${TAG_PREFIX%\"*}"
 
 if [[ -z "${REPO}" ]]; then
     echo "Error: Could not extract REPO from manifest"
@@ -69,7 +83,8 @@ PLATFORMS=("osx-arm64" "osx-x64" "linux-arm64" "linux-x64")
 
 for platform in "${PLATFORMS[@]}"; do
     # Find checksum for this platform
-    sha=$(echo "${CHECKSUMS}" | grep "_${platform}\.tar\.gz" | awk '{print $1}')
+    sha_line=$(echo "${CHECKSUMS}" | grep "_${platform}\.tar\.gz" || true)
+    sha=$(echo "${sha_line}" | awk '{print $1}')
 
     if [[ -z "${sha}" ]]; then
         echo "Warning: No checksum found for platform ${platform}"
@@ -79,12 +94,12 @@ for platform in "${PLATFORMS[@]}"; do
     echo "Updating ${platform}: ${sha}"
 
     # Update SHA256 line in manifest (preserve alignment spacing)
-    sed -i '' "s/\(\"${platform}\"[[:space:]]*=>[[:space:]]*\"\)[a-f0-9]\{64\}\"/\1${sha}\"/" "${MANIFEST_FILE}"
+    sed_inplace "s/\(\"${platform}\"[[:space:]]*=>[[:space:]]*\"\)[a-f0-9]\{64\}\"/\1${sha}\"/" "${MANIFEST_FILE}"
 done
 
 # Update VERSION
 echo "Updating VERSION to ${NEW_VERSION}"
-sed -i '' "s/VERSION = \".*\"/VERSION = \"${NEW_VERSION}\"/" "${MANIFEST_FILE}"
+sed_inplace "s/VERSION = \".*\"/VERSION = \"${NEW_VERSION}\"/" "${MANIFEST_FILE}"
 
 echo ""
 echo "Manifest updated: ${MANIFEST_FILE}"
