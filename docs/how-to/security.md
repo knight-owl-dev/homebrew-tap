@@ -59,30 +59,23 @@ Key style requirements:
 
 ### Input Validation
 
-**Rule**: Always validate untrusted inputs before using them in shell commands.
+**Rule**: Validate untrusted inputs before using them. Validation lives in scripts (not workflows)
+for testability and reuse.
 
-**Example** (from `.github/workflows/update-formula.yml`):
+**Example** (from `scripts/update-formula-many.sh`):
 
-```yaml
-- name: Update formulas
-  env:
-    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    FORMULAS: ${{ steps.args.outputs.formulas }}
-  run: |
-    if [ -n "${FORMULAS}" ]
-    then
-      set -- ${FORMULAS}
-      for formula in "$@"
-      do
-        if ! printf '%s\n' "${formula}" | grep -Eq '^[A-Za-z0-9:.-]*$'
-        then
-          echo "Error: Invalid characters in formula spec: '${formula}'" >&2
-          exit 1
-        fi
-      done
-      ./scripts/update-formula-many.sh "$@"
-    fi
+```bash
+validate_formula_name() {
+  local name="$1"
+  if [[ ! "${name}" =~ ^[A-Za-z0-9-]+$ ]]
+  then
+    echo "Error: Invalid formula name: ${name}" >&2
+    return 1
+  fi
+}
 ```
+
+The workflow passes input via `env:` blocks (preventing injection), and the script validates format.
 
 ### Least-Privilege Permissions
 
@@ -148,7 +141,6 @@ The script should reject invalid input and exit with an error.
 |--------------------------|--------------|--------------------------------------------------------------|
 | `update-formula-many.sh` | Formula name | `^[A-Za-z0-9-]+$`                                            |
 | `update-formula-many.sh` | Version      | `^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$` |
-| `update-formula.yml`     | Formula spec | `^[A-Za-z0-9:.-]*$`                                          |
 
 **Example - Formula name validation** (from `scripts/update-formula-many.sh`):
 
@@ -212,7 +204,6 @@ fi
 | Pattern                      | Location                               | Description                    |
 |------------------------------|----------------------------------------|--------------------------------|
 | `env:` blocks                | `.github/workflows/update-formula.yml` | Safe GitHub expression passing |
-| Input validation             | `.github/workflows/update-formula.yml` | Regex validation in workflow   |
 | Explicit permissions         | `.github/workflows/tests.yml`          | Least-privilege access         |
 | `persist-credentials: false` | `.github/workflows/update-formula.yml` | Checkout security              |
 | `set -euo pipefail`          | `scripts/update-formula-many.sh`       | Strict mode                    |
