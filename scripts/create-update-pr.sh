@@ -30,8 +30,10 @@ fi
 
 # Collect updated formulas and versions for commit message
 UPDATES=""
-for file in $(git diff --staged --name-only)
+STAGED_FILES=$(git diff --staged --name-only)
+while IFS= read -r file
 do
+  [[ -z "${file}" ]] && continue
   formula=$(basename "${file}" .rb)
   version=$(grep -E '^\s*VERSION\s*=' "${file}" | sed 's/.*"\(.*\)".*/\1/')
   if [[ -n "${UPDATES}" ]]
@@ -39,7 +41,7 @@ do
     UPDATES="${UPDATES}, "
   fi
   UPDATES="${UPDATES}${formula} to ${version}"
-done
+done <<<"${STAGED_FILES}"
 
 # Create branch with run ID (globally unique)
 BRANCH="auto-update-formula/${GITHUB_RUN_ID}"

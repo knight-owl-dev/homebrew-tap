@@ -69,7 +69,7 @@ for testability and reuse.
 
 ```bash
 validate_formula_name() {
-  local name="$1"
+  local name="${1}"
   if [[ ! "${name}" =~ ^[A-Za-z0-9-]+$ ]]
   then
     echo "Error: Invalid formula name: ${name}" >&2
@@ -158,11 +158,14 @@ The script should reject invalid input and exit with an error.
 | `update-formula-many.sh` | Formula name | `^[A-Za-z0-9-]+$`                                            |
 | `update-formula-many.sh` | Version      | `^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$` |
 
+Version format supports 2-4 numeric segments (e.g., `1.0`, `1.2.3`, `1.2.3.4`) with optional
+pre-release suffix (e.g., `-alpha`, `-rc.1`). Build metadata (`+build`) is not supported.
+
 **Example - Formula name validation** (from `scripts/update-formula-many.sh`):
 
 ```bash
 validate_formula_name() {
-  local name="$1"
+  local name="${1}"
   if [[ ! "${name}" =~ ^[A-Za-z0-9-]+$ ]]
   then
     echo "Error: Invalid formula name: ${name}" >&2
@@ -175,7 +178,7 @@ validate_formula_name() {
 
 ```bash
 validate_version() {
-  local version="$1"
+  local version="${1}"
   if [[ ! "${version}" =~ ^[0-9]+(\.[0-9]+){1,3}(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]
   then
     echo "Error: Invalid version format: ${version}" >&2
