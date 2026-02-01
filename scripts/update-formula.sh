@@ -9,10 +9,9 @@ set -e
 # Example:
 #   ./scripts/update-formula.sh keystone-cli 0.3.0
 #
-# Security:
-#   Uses `set -e` only (not `set -euo pipefail`) because this script uses
-#   `|| true` patterns with grep to handle missing data gracefully. The
-#   `-o pipefail` flag would cause pipelines like `grep ... || true` to fail.
+# Note:
+#   Uses `set -e` only. This script allows grep to return no matches without
+#   failing, using `|| true` patterns throughout.
 #
 # Requirements:
 #   - gh CLI installed and authenticated

@@ -8,10 +8,9 @@ set -e
 #   ./scripts/dev-tap.sh disable  # Restore original tap, disable dev mode
 #   ./scripts/dev-tap.sh status   # Show current tap status
 #
-# Security:
-#   Uses `set -e` only (not `set -euo pipefail`) because this script uses
-#   `|| true` patterns and pipelines with grep that may not match. The
-#   `-o pipefail` flag would cause these to fail unexpectedly.
+# Note:
+#   Uses `set -e` only. This script allows some commands (grep, brew developer)
+#   to fail without stopping execution, using `|| true` patterns.
 
 TAP_DIR="$(brew --prefix)/Library/Taps/knight-owl-dev/homebrew-tap"
 BACKUP_DIR="/tmp/homebrew-tap.bak"

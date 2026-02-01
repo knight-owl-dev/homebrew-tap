@@ -144,8 +144,8 @@ set -euo pipefail
 | `-u`          | Error on unset variables | Catches typos and missing inputs |
 | `-o pipefail` | Propagate pipe errors    | Catches failures in pipelines    |
 
-**Note**: Interactive scripts may use only `set -e` when they rely on `|| true` patterns
-that conflict with `-o pipefail`. See individual script headers for rationale.
+**Note**: Some scripts use only `set -e` when they intentionally allow commands like
+`grep` to fail (no match) without stopping execution. See individual script headers.
 New automation scripts should prefer the full `set -euo pipefail`.
 
 ### Input Validation with Allowlists
