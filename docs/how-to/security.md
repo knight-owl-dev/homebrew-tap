@@ -57,6 +57,9 @@ Key style requirements:
     ./scripts/update-formula-many.sh ${{ inputs.formulas }}
 ```
 
+**Note**: When testing for injection vulnerabilities, use benign payloads like `$(whoami)` or `$(id)`,
+not destructive commands.
+
 ### Input Validation
 
 **Rule**: Validate untrusted inputs before using them. Validation lives in scripts (not workflows)
@@ -100,6 +103,18 @@ jobs:
       pull-requests: read
 ```
 
+### Action Version Pinning
+
+**Decision**: This repo pins actions to major version tags (e.g., `@v4`) rather than commit SHAs.
+
+| Approach                   | Pros                            | Cons                      |
+|----------------------------|---------------------------------|---------------------------|
+| SHA pins (`@ab1c2d3...`)   | Maximum security, immutable     | Manual updates, verbose   |
+| Version tags (`@v4`)       | Auto-receives patches, readable | Tag could be moved (rare) |
+
+We accept the minor risk of tag-based pinning for practical maintainability.
+For higher-security environments, consider SHA pinning with Dependabot.
+
 ### Checkout Security
 
 **Rule**: Disable credential persistence when the workflow doesn't need to push.
@@ -129,8 +144,9 @@ set -euo pipefail
 | `-u`          | Error on unset variables | Catches typos and missing inputs |
 | `-o pipefail` | Propagate pipe errors    | Catches failures in pipelines    |
 
-**Note**: Some scripts in this repo use only `set -e` for compatibility.
-New scripts should prefer the full `set -euo pipefail`.
+**Note**: Interactive scripts may use only `set -e` when they rely on `|| true` patterns
+that conflict with `-o pipefail`. See individual script headers for rationale.
+New automation scripts should prefer the full `set -euo pipefail`.
 
 ### Input Validation with Allowlists
 

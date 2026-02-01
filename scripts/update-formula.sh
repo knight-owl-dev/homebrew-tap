@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
+
 # Update a formula manifest with a new version and checksums from GitHub release
 #
 # Usage:
@@ -7,11 +9,14 @@
 # Example:
 #   ./scripts/update-formula.sh keystone-cli 0.3.0
 #
+# Security:
+#   Uses `set -e` only (not `set -euo pipefail`) because this script uses
+#   `|| true` patterns with grep to handle missing data gracefully. The
+#   `-o pipefail` flag would cause pipelines like `grep ... || true` to fail.
+#
 # Requirements:
 #   - gh CLI installed and authenticated
 #   - Release must include checksums.txt with SHA256 hashes
-
-set -e
 
 # Cross-platform sed in-place edit (macOS requires '', Linux doesn't)
 sed_inplace() {

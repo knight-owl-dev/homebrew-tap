@@ -1,12 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
+
 # Toggle between local development tap and installed tap
 #
 # Usage:
 #   ./scripts/dev-tap.sh enable   # Point tap to local repo, enable dev mode
 #   ./scripts/dev-tap.sh disable  # Restore original tap, disable dev mode
 #   ./scripts/dev-tap.sh status   # Show current tap status
-
-set -e
+#
+# Security:
+#   Uses `set -e` only (not `set -euo pipefail`) because this script uses
+#   `|| true` patterns and pipelines with grep that may not match. The
+#   `-o pipefail` flag would cause these to fail unexpectedly.
 
 TAP_DIR="$(brew --prefix)/Library/Taps/knight-owl-dev/homebrew-tap"
 BACKUP_DIR="/tmp/homebrew-tap.bak"

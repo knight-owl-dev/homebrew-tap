@@ -32,7 +32,7 @@ Formulas use a manifest-based structure where version and checksums are stored i
 
 - **Adding a new formula**: See [docs/how-to/add-formula.md](docs/how-to/add-formula.md)
 - **Updating to a new version**: See [docs/how-to/sync-formula.md](docs/how-to/sync-formula.md)
-- **Security best practices**: See [docs/how-to/security.md](docs/how-to/security.md)
+- **Security best practices**: See [docs/how-to/security.md](docs/how-to/security.md) — **follow strictly when writing workflows or scripts**. When testing for injection vulnerabilities, use benign payloads like `$(whoami)` or `$(id)`, not destructive commands.
 
 Quick update commands:
 
@@ -59,9 +59,20 @@ To test formula changes locally, use the dev-tap script to point Homebrew at you
 
 While enabled, run `brew reinstall --build-from-source keystone-cli` to test changes.
 
-## Shell Script Formatting
+## Shell Script Conventions
 
-Always use `brew style --fix` instead of standalone `shfmt` for formatting shell scripts. Homebrew has its own formatting preferences (e.g., `then` on a new line) that differ from shfmt defaults.
+Use `#!/usr/bin/env bash` for portability, and prefer `set -euo pipefail` on line 2:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Script description...
+```
+
+See [docs/how-to/security.md](docs/how-to/security.md) for when `set -e` alone is acceptable.
+
+Use `brew style --fix` for formatting (not standalone shfmt):
 
 ```bash
 brew style --fix scripts/
