@@ -32,6 +32,7 @@ Formulas use a manifest-based structure where version and checksums are stored i
 
 - **Adding a new formula**: See [docs/how-to/add-formula.md](docs/how-to/add-formula.md)
 - **Updating to a new version**: See [docs/how-to/sync-formula.md](docs/how-to/sync-formula.md)
+- **Security best practices**: See [docs/how-to/security.md](docs/how-to/security.md)
 
 Quick update commands:
 
