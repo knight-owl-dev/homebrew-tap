@@ -225,7 +225,7 @@ fi
 | `env:` blocks                | `.github/workflows/update-formula.yml` | Safe GitHub expression passing |
 | Explicit permissions         | `.github/workflows/tests.yml`          | Least-privilege access         |
 | `persist-credentials: false` | `.github/workflows/update-formula.yml` | Checkout security              |
-| `set -euo pipefail`          | `scripts/update-formula-many.sh`       | Strict mode                    |
+| `set -euo pipefail`          | `scripts/create-update-pr.sh`          | Strict mode                    |
 | `validate_formula_name()`    | `scripts/update-formula-many.sh`       | Formula name validation        |
 | `validate_version()`         | `scripts/update-formula-many.sh`       | Version format validation      |
 

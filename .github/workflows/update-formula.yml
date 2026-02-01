@@ -62,6 +62,7 @@ jobs:
           FORMULAS: ${{ steps.args.outputs.formulas }}
         run: |
           # shellcheck disable=SC2086
+          # Word splitting is intentional: script expects space-separated formula arguments
           ./scripts/update-formula-many.sh ${FORMULAS}
 
       - name: Run brew test-bot syntax check
