@@ -1,12 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -e
+
 # Toggle between local development tap and installed tap
 #
 # Usage:
 #   ./scripts/dev-tap.sh enable   # Point tap to local repo, enable dev mode
 #   ./scripts/dev-tap.sh disable  # Restore original tap, disable dev mode
 #   ./scripts/dev-tap.sh status   # Show current tap status
-
-set -e
+#
+# Note:
+#   Uses `set -e` only. This script allows some commands (grep, brew developer)
+#   to fail without stopping execution, using `|| true` patterns.
 
 TAP_DIR="$(brew --prefix)/Library/Taps/knight-owl-dev/homebrew-tap"
 BACKUP_DIR="/tmp/homebrew-tap.bak"
