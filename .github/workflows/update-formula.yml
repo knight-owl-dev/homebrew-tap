@@ -76,6 +76,4 @@ jobs:
           GH_TOKEN: ${{ secrets.PR_TOKEN }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          git add Manifests/
-          ./scripts/create-update-pr.sh
+        run: ./scripts/create-update-pr.sh

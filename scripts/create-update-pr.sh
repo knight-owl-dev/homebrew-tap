@@ -22,6 +22,9 @@ set -euo pipefail
 git config user.name "github-actions[bot]"
 git config user.email "github-actions[bot]@users.noreply.github.com"
 
+# Stage updated manifest files
+git add Manifests/
+
 if git diff --staged --quiet
 then
   echo "No changes to commit"
@@ -34,8 +37,14 @@ STAGED_FILES=$(git diff --staged --name-only)
 while IFS= read -r file
 do
   [[ -z "${file}" ]] && continue
+
+  # Extract formula name and version
+  # Manifests are auto-generated with consistent format; simple extraction suffices
   formula=$(basename "${file}" .rb)
-  version=$(grep -E '^\s*VERSION\s*=' "${file}" | sed 's/.*"\(.*\)".*/\1/')
+  version=$(grep -E '^\s*VERSION\s*=' "${file}" | sed 's/.*"\(.*\)".*/\1/' || true)
+  [[ -z "${version}" ]] && version="unknown"
+
+  # Append to updates list
   if [[ -n "${UPDATES}" ]]
   then
     UPDATES="${UPDATES}, "
