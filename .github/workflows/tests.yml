@@ -18,6 +18,9 @@ jobs:
       contents: read
       pull-requests: read
     steps:
+      - name: Configure git defaults
+        run: git config --global init.defaultBranch main
+
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@main
