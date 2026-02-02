@@ -87,10 +87,10 @@ Only request the minimum permissions needed.
 
 | Workflow/Job             | Permissions                                                              | Purpose                         |
 |--------------------------|--------------------------------------------------------------------------|---------------------------------|
-| tests.yml test-bot       | `actions: read`, `checks: read`, `contents: read`, `pull-requests: read` | Read-only access for CI testing |
+| ci.yml test-bot          | `actions: read`, `checks: read`, `contents: read`, `pull-requests: read` | Read-only access for CI testing |
 | update-formula.yml       | `contents: read`                                                         | Read repository for building    |
 
-**Example** (from `.github/workflows/tests.yml`):
+**Example** (from `.github/workflows/ci.yml`):
 
 ```yaml
 jobs:
@@ -223,7 +223,7 @@ fi
 | Pattern                      | Location                               | Description                    |
 |------------------------------|----------------------------------------|--------------------------------|
 | `env:` blocks                | `.github/workflows/update-formula.yml` | Safe GitHub expression passing |
-| Explicit permissions         | `.github/workflows/tests.yml`          | Least-privilege access         |
+| Explicit permissions         | `.github/workflows/ci.yml`             | Least-privilege access         |
 | `persist-credentials: false` | `.github/workflows/update-formula.yml` | Checkout security              |
 | `set -euo pipefail`          | `scripts/create-update-pr.sh`          | Strict mode                    |
 | `validate_formula_name()`    | `scripts/update-formula-many.sh`       | Formula name validation        |
