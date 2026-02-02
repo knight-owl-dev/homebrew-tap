@@ -15,6 +15,12 @@ This is a Homebrew tap for Knight-Owl-Dev packages.
 ## Common Commands
 
 ```bash
+# Run all linters (mirrors CI)
+make lint
+
+# Auto-fix linting issues where possible
+make lint-fix
+
 # Validate formula syntax
 brew test-bot --only-tap-syntax
 
@@ -25,6 +31,18 @@ brew test keystone-cli
 # Audit a formula for style issues
 brew audit --strict --online Formula/keystone-cli.rb
 ```
+
+### Makefile Targets
+
+| Target          | Description                                            |
+| --------------- | ------------------------------------------------------ |
+| `lint`          | Run all linters (brew style, actionlint, markdownlint) |
+| `lint-brew`     | Check Ruby style in Formula/, Manifests/, scripts/     |
+| `lint-action`   | Check GitHub Actions workflow syntax                   |
+| `lint-md`       | Check Markdown files                                   |
+| `lint-fix`      | Auto-fix brew style and markdownlint issues            |
+| `lint-brew-fix` | Auto-fix brew style issues                             |
+| `lint-md-fix`   | Auto-fix markdownlint issues                           |
 
 ## Adding or Updating a Formula
 
@@ -80,7 +98,7 @@ brew style --fix scripts/
 
 ## CI/CD
 
-- **tests.yml**: Runs linting (actionlint) and `brew test-bot` on PRs and pushes to main
+- **tests.yml**: Runs linting (actionlint, markdownlint) and `brew test-bot` on PRs and pushes to main
 - **update-formula.yml**: Updates formulas to latest versions, creates PR with auto-merge
   - Trigger manually via Actions tab, or via `repository_dispatch` from upstream repos
   - Requires `PR_TOKEN` secret (PAT with `repo` scope)
