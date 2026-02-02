@@ -80,7 +80,7 @@ brew style --fix scripts/
 
 ## CI/CD
 
-- **tests.yml**: Runs `brew test-bot` on PRs and pushes to main (Ubuntu, Intel Mac, ARM Mac)
+- **tests.yml**: Runs linting (actionlint) and `brew test-bot` on PRs and pushes to main
 - **update-formula.yml**: Updates formulas to latest versions, creates PR with auto-merge
   - Trigger manually via Actions tab, or via `repository_dispatch` from upstream repos
   - Requires `PR_TOKEN` secret (PAT with `repo` scope)
