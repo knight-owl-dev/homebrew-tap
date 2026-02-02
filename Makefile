@@ -12,7 +12,7 @@ lint-action: ## Check GitHub Actions (actionlint)
 	actionlint
 
 lint-md: ## Check Markdown (markdownlint)
-	markdownlint-cli2 "**/*.md"
+	markdownlint-cli2 "*.md" "docs/**/*.md" ".github/**/*.md" ".claude/**/*.md"
 
 lint-fix: lint-brew-fix lint-md-fix ## Fix all auto-fixable issues
 
@@ -20,4 +20,4 @@ lint-brew-fix: ## Fix Ruby style issues
 	brew style --fix Formula/ Manifests/ scripts/
 
 lint-md-fix: ## Fix Markdown issues
-	markdownlint-cli2 --fix "**/*.md"
+	markdownlint-cli2 --fix "*.md" "docs/**/*.md" ".github/**/*.md" ".claude/**/*.md"
