@@ -73,10 +73,17 @@ jobs:
           brew developer on
           brew test-bot --only-tap-syntax
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Create PR with changes
         env:
-          # Use PAT to trigger CI workflow on PR (GITHUB_TOKEN doesn't trigger workflows)
-          GH_TOKEN: ${{ secrets.PR_TOKEN }}
+          # Use GitHub App token to trigger CI workflow on PR (GITHUB_TOKEN doesn't trigger workflows)
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: ./scripts/create-update-pr.sh

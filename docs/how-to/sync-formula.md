@@ -123,14 +123,23 @@ The `update-formula` workflow automates formula updates via GitHub Actions.
 
 ### Automated Trigger
 
-Package release workflows can trigger this via `repository_dispatch`. Add this step to your
+Package release workflows can trigger this via `repository_dispatch`. Add these steps to your
 release workflow:
 
 ```yaml
+- name: Generate GitHub App token
+  id: app-token
+  uses: actions/create-github-app-token@v2
+  with:
+    app-id: ${{ secrets.APP_ID }}
+    private-key: ${{ secrets.APP_PRIVATE_KEY }}
+    owner: knight-owl-dev
+    repositories: homebrew-tap
+
 - name: Trigger Homebrew tap update
   uses: peter-evans/repository-dispatch@v4
   with:
-    token: ${{ secrets.HOMEBREW_TAP_REPO_TOKEN }}
+    token: ${{ steps.app-token.outputs.token }}
     repository: knight-owl-dev/homebrew-tap
     event-type: release-published
     client-payload: '{"formulas": "my-formula:${{ needs.release.outputs.version }}"}'
@@ -138,8 +147,8 @@ release workflow:
 
 Required setup:
 
-1. Create a fine-grained PAT scoped to `knight-owl-dev/homebrew-tap` with **Contents: Read and write**
-2. Add the PAT as a secret (e.g., `HOMEBREW_TAP_REPO_TOKEN`) in your package's repository
+1. Install the knight-owl-dev GitHub App on your package's repo
+2. Ensure `APP_ID` and `APP_PRIVATE_KEY` org secrets are available to your repo
 
 You can also trigger manually via the `gh` CLI:
 
