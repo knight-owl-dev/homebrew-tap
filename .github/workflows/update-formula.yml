@@ -79,6 +79,7 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: homebrew-tap
 
       - name: Create PR with changes
         env:
