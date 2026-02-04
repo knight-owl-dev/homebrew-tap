@@ -101,7 +101,7 @@ brew style --fix scripts/
 - **ci.yml**: Runs linting (actionlint, markdownlint) and `brew test-bot` on PRs and pushes to main
 - **update-formula.yml**: Updates formulas to latest versions, creates PR with auto-merge
   - Trigger manually via Actions tab, or via `repository_dispatch` from upstream repos
-  - Requires `PR_TOKEN` secret (PAT with `repo` scope)
+  - Uses GitHub App token for PR creation (triggers CI workflows)
 
 Note: There is no bottle publishing workflow. Formulas in this tap download pre-built binaries directly from releases, so bottling would be redundant.
 
