@@ -38,6 +38,9 @@ class KeystoneCli < Formula
 
     man1.install "keystone-cli.1"
     pkgshare.install "LICENSE"
+
+    bash_completion.install "keystone-cli.bash" => "keystone-cli" if File.exist?("keystone-cli.bash")
+    zsh_completion.install "_keystone-cli" if File.exist?("_keystone-cli")
   end
 
   test do
