@@ -66,8 +66,6 @@ fi
 git commit -m "${TITLE}"
 
 # Push and create PR
-# Clear any http.extraheader that may override URL credentials (e.g., from Homebrew setup)
-git config --unset-all http.https://github.com/.extraheader 2>/dev/null || true
 git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 git push -u origin "${BRANCH}"
 
