@@ -5,15 +5,15 @@
 # Update with: scripts/update-formula.sh keystone-cli <version>
 
 module KeystoneCliManifest
-  VERSION = "0.2.1"
+  VERSION = "0.2.2"
   REPO = "knight-owl-dev/keystone-cli"
   TAG_PREFIX = "v"
   ASSET_TEMPLATE = "keystone-cli_%<version>s_%<platform>s.tar.gz"
 
   SHA256 = {
-    "osx-arm64"   => "38fe62eb92607e58eb118e1657daf38ba4e87dc44fef51245807a61cd806cd39",
-    "osx-x64"     => "77d6796429eab21a46c14453febe3f94a0c54e3d5c204511e3329be374610683",
-    "linux-arm64" => "0bca702226a6ae47d6d8f146900536634b3c979e92341ed82e73779e8a77ac26",
-    "linux-x64"   => "6c3f9fcdce4be3c270017d0c66c0a251d3e2fc2c4cd7128c606d0ddcda5dc712",
+    "osx-arm64"   => "afe770a60f425896f15fb9feba379e4e43c130fddcded5dcf5bfc6aa8ee031e0",
+    "osx-x64"     => "01ad0c2d3d2ccab54eecc825353d34977f895413e0716090417b7ffa886b1b47",
+    "linux-arm64" => "80bf0447cbfc95f42afae70ddde10fdf474101be317967a11236b2ebf84434e8",
+    "linux-x64"   => "3f49475ecf8aaf8e2c5cbc388e263b05a249c9f603500c415dc1832c69abc8de",
   }.freeze
 end
