@@ -9,24 +9,10 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    container: ghcr.io/knight-owl-dev/ci-tools:latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup actionlint
-        uses: raven-actions/actionlint@v2
-
-      - name: Check GitHub Actions workflows (actionlint)
-        run: actionlint
-
-      - name: Check Markdown files (markdownlint)
-        uses: DavidAnson/markdownlint-cli2-action@v22
-        with:
-          globs: |
-            *.md
-            docs/**/*.md
-            .github/**/*.md
-            .claude/**/*.md
+      - uses: actions/checkout@v6
+      - run: make lint SKIP=lint-brew
 
   test-bot:
     strategy:
