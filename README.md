@@ -27,7 +27,6 @@ Or in a `Brewfile`:
 ```ruby
 tap "knight-owl-dev/tap"
 brew "<formula>"
-
 ```
 
 ## Releasing Updates
