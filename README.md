@@ -4,28 +4,29 @@
 
 ## Available Formulae
 
-| Formula                                                          | Description                         |
-|------------------------------------------------------------------|-------------------------------------|
-| [`keystone-cli`](https://github.com/Knight-Owl-Dev/keystone-cli) | Command-line interface for Keystone |
+| Formula                                                          | Description                              |
+|------------------------------------------------------------------|------------------------------------------|
+| [`ci-tools`](https://github.com/Knight-Owl-Dev/devops)           | CI/CD tools for GitHub Actions workflows |
+| [`keystone-cli`](https://github.com/Knight-Owl-Dev/keystone-cli) | Command-line interface for Keystone      |
 
 ## Installation
 
 ```bash
-brew install knight-owl-dev/tap/keystone-cli
+brew install knight-owl-dev/tap/<formula>
 ```
 
 Or tap first, then install:
 
 ```bash
 brew tap knight-owl-dev/tap
-brew install keystone-cli
+brew install <formula>
 ```
 
 Or in a `Brewfile`:
 
 ```ruby
 tap "knight-owl-dev/tap"
-brew "keystone-cli"
+brew "<formula>"
 ```
 
 ## Releasing Updates
