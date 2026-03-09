@@ -239,5 +239,5 @@ fi
 ## See Also
 
 - [CLAUDE.md](../../CLAUDE.md) - Development reference
-- [add-formula.md](add-formula.md) - Adding new formulas
+- [add-formula](add-formula/README.md) - Adding new formulas
 - [sync-formula.md](sync-formula.md) - Syncing formula versions

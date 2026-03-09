@@ -11,29 +11,8 @@ This guide walks through adding a new formula to the tap using the manifest-base
 
 ## Step 1: Create the Manifest
 
-Create `Manifests/<formula-name>.rb`:
-
-```ruby
-# typed: strict
-# frozen_string_literal: true
-
-# AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
-# Update with: scripts/update-formula.sh <formula-name> <version>
-
-module ExampleManifest
-  VERSION = "<version>"
-  REPO = "<org>/<repo>"
-  TAG_PREFIX = "v"
-  ASSET_TEMPLATE = "<name>_%<version>s_%<platform>s.tar.gz"
-
-  SHA256 = {
-    "osx-arm64"   => "<sha256>",
-    "osx-x64"     => "<sha256>",
-    "linux-arm64" => "<sha256>",
-    "linux-x64"   => "<sha256>",
-  }.freeze
-end
-```
+Create `Manifests/<formula-name>.rb` using the
+[manifest template](manifest-template.rb.md).
 
 **Notes:**
 
@@ -43,52 +22,8 @@ end
 
 ## Step 2: Create the Formula
 
-Create `Formula/<formula-name>.rb`:
-
-```ruby
-require_relative "../Manifests/example"
-
-class Example < Formula
-  include ExampleManifest
-
-  desc "<description>"
-  homepage "https://github.com/#{REPO}"
-  version VERSION
-  license "<license>"
-
-  on_macos do
-    on_arm do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "osx-arm64")}"
-      sha256 SHA256["osx-arm64"]
-    end
-    on_intel do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "osx-x64")}"
-      sha256 SHA256["osx-x64"]
-    end
-  end
-
-  on_linux do
-    on_arm do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "linux-arm64")}"
-      sha256 SHA256["linux-arm64"]
-    end
-    on_intel do
-      url "https://github.com/#{REPO}/releases/download/#{TAG_PREFIX}#{VERSION}/#{format(ASSET_TEMPLATE, version: VERSION, platform: "linux-x64")}"
-      sha256 SHA256["linux-x64"]
-    end
-  end
-
-  def install
-    # Customize based on archive contents
-    bin.install "<binary-name>"
-    # Optional: man pages, config files, etc.
-  end
-
-  test do
-    system bin/"<binary-name>", "--version"
-  end
-end
-```
+Create `Formula/<formula-name>.rb` using the
+[formula template](formula-template.rb.md).
 
 **Notes:**
 
@@ -136,11 +71,11 @@ Once merged, the formula will be automatically updated when new releases are pub
 
 - The `update-formula` workflow discovers all manifests in `Manifests/`
 - When triggered (manually or via `repository_dispatch`), it updates versions and checksums
-- See [sync-formula.md](sync-formula.md) for details on automated updates
+- See [sync-formula.md](../sync-formula.md) for details on automated updates
 
 ## Example: keystone-cli
 
 See the existing implementation:
 
-- [`Manifests/keystone-cli.rb`](../../Manifests/keystone-cli.rb)
-- [`Formula/keystone-cli.rb`](../../Formula/keystone-cli.rb)
+- [`Manifests/keystone-cli.rb`](../../../Manifests/keystone-cli.rb)
+- [`Formula/keystone-cli.rb`](../../../Formula/keystone-cli.rb)

@@ -48,7 +48,7 @@ brew audit --strict --online Formula/keystone-cli.rb
 
 Formulas use a manifest-based structure where version and checksums are stored in `Manifests/<name>.rb` and the formula logic is in `Formula/<name>.rb`.
 
-- **Adding a new formula**: See [docs/how-to/add-formula.md](docs/how-to/add-formula.md)
+- **Adding a new formula**: See [docs/how-to/add-formula/README.md](docs/how-to/add-formula/README.md)
 - **Updating to a new version**: See [docs/how-to/sync-formula.md](docs/how-to/sync-formula.md)
 - **Security best practices**: See [docs/how-to/security.md](docs/how-to/security.md) — **follow strictly when writing workflows or scripts**. When testing for injection vulnerabilities, use benign payloads like `$(whoami)` or `$(id)`, not destructive commands.
 
