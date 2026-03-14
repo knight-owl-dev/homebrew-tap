@@ -5,15 +5,15 @@
 # Update with: scripts/update-formula.sh ci-tools <version>
 
 module CiToolsManifest
-  VERSION = "1.1.6"
+  VERSION = "1.1.7"
   REPO = "knight-owl-dev/devops"
   TAG_PREFIX = "v"
   ASSET_TEMPLATE = "ci-tools_%<version>s_%<platform>s.tar.gz"
 
   SHA256 = {
-    "osx-arm64"   => "cfcaba60a3e7fbf17f0ae8134269c9d437b00c63cdbe5b04cda4132f126c0c83",
-    "osx-x64"     => "cfcaba60a3e7fbf17f0ae8134269c9d437b00c63cdbe5b04cda4132f126c0c83",
-    "linux-arm64" => "cfcaba60a3e7fbf17f0ae8134269c9d437b00c63cdbe5b04cda4132f126c0c83",
-    "linux-x64"   => "cfcaba60a3e7fbf17f0ae8134269c9d437b00c63cdbe5b04cda4132f126c0c83",
+    "osx-arm64"   => "1452f6c2980cac8814d7af26ea3dad2aa2abd1c112c0b104b7b503105b2bcede",
+    "osx-x64"     => "1452f6c2980cac8814d7af26ea3dad2aa2abd1c112c0b104b7b503105b2bcede",
+    "linux-arm64" => "1452f6c2980cac8814d7af26ea3dad2aa2abd1c112c0b104b7b503105b2bcede",
+    "linux-x64"   => "1452f6c2980cac8814d7af26ea3dad2aa2abd1c112c0b104b7b503105b2bcede",
   }.freeze
 end
