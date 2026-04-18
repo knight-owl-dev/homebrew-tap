@@ -1,0 +1,4 @@
+# Allowed `vars.*` references in workflows. See:
+# https://github.com/rhysd/actionlint/blob/main/docs/config.md
+config-variables:
+  - APP_CLIENT_ID
