@@ -15,6 +15,8 @@ lint-brew: ## Check Ruby style (brew style)
 lint-action: ## Check GitHub Actions (actionlint)
 	actionlint .github/workflows/*.yml
 	@echo "OK"
+	validate-action-pins .github/workflows/*.yml
+	@echo "OK"
 
 lint-md: ## Check Markdown (markdownlint)
 	markdownlint-cli2 "**/*.md"
