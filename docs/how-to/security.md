@@ -105,15 +105,32 @@ jobs:
 
 ### Action Version Pinning
 
-**Decision**: This repo pins actions to major version tags (e.g., `@v4`) rather than commit SHAs.
+**Rule**: Every `uses:` reference is pinned to a full commit SHA with a semver
+version comment. Tag-only and branch-only references are vulnerable to
+tag-rewriting and force-push attacks; SHA pinning ensures the exact code that
+was audited is what runs. The semver comment lets Dependabot track the current
+version and propose clean minor/patch bumps.
 
-| Approach                   | Pros                            | Cons                      |
-|----------------------------|---------------------------------|---------------------------|
-| SHA pins (`@ab1c2d3...`)   | Maximum security, immutable     | Manual updates, verbose   |
-| Version tags (`@v4`)       | Auto-receives patches, readable | Tag could be moved (rare) |
+| Reference style   | Use when                                              |
+|-------------------|-------------------------------------------------------|
+| `@<sha> # vX.Y.Z` | Default — action has tagged releases                  |
+| `@<sha> # main`   | Fallback — action has no tagged releases upstream     |
 
-We accept the minor risk of tag-based pinning for practical maintainability.
-For higher-security environments, consider SHA pinning with Dependabot.
+**Example** (from `.github/workflows/ci.yml`):
+
+```yaml
+- uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+```
+
+**Branch-pinned actions**: A few upstream actions publish no tagged releases
+(e.g., `Homebrew/actions/setup-homebrew`). Pin these to a specific commit on
+the default branch. Dependabot cannot auto-bump branch-SHA pins without tags,
+so these require periodic manual review.
+
+**Enforcement**: `make lint-action` runs `validate-action-pins` (shipped in
+the `ci-tools` image), which resolves each pinned SHA against its claimed tag
+via the GitHub API and fails the lint if they do not match. Branch-pinned
+actions emit a warning (tag cannot be resolved) but do not fail.
 
 ### Checkout Security
 
@@ -123,7 +140,7 @@ For higher-security environments, consider SHA pinning with Dependabot.
 
 ```yaml
 - name: Checkout
-  uses: actions/checkout@v4
+  uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
   with:
     persist-credentials: false
 ```
@@ -225,6 +242,8 @@ fi
 | `env:` blocks                | `.github/workflows/update-formula.yml` | Safe GitHub expression passing |
 | Explicit permissions         | `.github/workflows/ci.yml`             | Least-privilege access         |
 | `persist-credentials: false` | `.github/workflows/update-formula.yml` | Checkout security              |
+| SHA pin + semver comment     | `.github/workflows/*.yml`              | Supply-chain hardening         |
+| `validate-action-pins`       | `Makefile` (`lint-action` target)      | Enforces pin/comment match     |
 | `set -euo pipefail`          | `scripts/create-update-pr.sh`          | Strict mode                    |
 | `validate_formula_name()`    | `scripts/update-formula-many.sh`       | Formula name validation        |
 | `validate_version()`         | `scripts/update-formula-many.sh`       | Version format validation      |
