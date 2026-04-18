@@ -12,7 +12,7 @@ lint-brew: ## Check Ruby style (brew style)
 	brew style Formula/ Manifests/ scripts/
 	@echo "OK"
 
-lint-action: ## Check GitHub Actions (actionlint)
+lint-action: ## Check GitHub Actions (actionlint, validate-action-pins)
 	actionlint .github/workflows/*.yml
 	@echo "OK"
 	validate-action-pins .github/workflows/*.yml
