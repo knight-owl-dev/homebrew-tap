@@ -129,15 +129,15 @@ release workflow:
 ```yaml
 - name: Generate GitHub App token
   id: app-token
-  uses: actions/create-github-app-token@v2
+  uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
   with:
-    app-id: ${{ secrets.APP_ID }}
+    client-id: ${{ vars.APP_CLIENT_ID }}
     private-key: ${{ secrets.APP_PRIVATE_KEY }}
     owner: knight-owl-dev
     repositories: homebrew-tap
 
 - name: Trigger Homebrew tap update
-  uses: peter-evans/repository-dispatch@v4
+  uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
   with:
     token: ${{ steps.app-token.outputs.token }}
     repository: knight-owl-dev/homebrew-tap
@@ -145,10 +145,14 @@ release workflow:
     client-payload: '{"formulas": "my-formula:${{ needs.release.outputs.version }}"}'
 ```
 
+> SHAs shown here were current at the time of writing. When copying into your
+> own workflow, pin to the latest tagged release and keep the semver comment
+> — see [security.md](security.md#action-version-pinning).
+
 Required setup:
 
 1. Install the knight-owl-dev GitHub App on your package's repo
-2. Ensure `APP_ID` and `APP_PRIVATE_KEY` org secrets are available to your repo
+2. Ensure the `APP_CLIENT_ID` variable and `APP_PRIVATE_KEY` secret are available to your repo (org-level is fine)
 
 You can also trigger manually via the `gh` CLI:
 
