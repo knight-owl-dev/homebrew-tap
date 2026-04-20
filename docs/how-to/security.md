@@ -125,12 +125,15 @@ version and propose clean minor/patch bumps.
 **Branch-pinned actions**: A few upstream actions publish no tagged releases
 (e.g., `Homebrew/actions/setup-homebrew`). Pin these to a specific commit on
 the default branch. Dependabot cannot auto-bump branch-SHA pins without tags,
-so these require periodic manual review.
+so the [`action-pin-monitor`](../../.github/workflows/action-pin-monitor.yml)
+workflow runs weekly and files a deduped issue when any such pin drifts
+behind its upstream branch head.
 
 **Enforcement**: `make lint-action` runs `validate-action-pins` (shipped in
-the `ci-tools` image), which resolves each pinned SHA against its claimed tag
-via the GitHub API and fails the lint if they do not match. Branch-pinned
-actions emit a warning (tag cannot be resolved) but do not fail.
+the `ci-tools` image), which resolves each pinned SHA against its claimed ref
+via the GitHub API. Tag pins fail the lint on mismatch; branch pins emit a
+warning noting how many commits they trail the branch head by (branch heads
+move, so a lagging pin is informational, not a hard failure).
 
 ### Checkout Security
 
