@@ -1,0 +1,105 @@
+name: Action Pin Monitor
+
+# Dependabot does not refresh SHA pins that track a branch (e.g. @<sha> # main).
+# This workflow scans our branch pins weekly and opens a deduped GitHub issue
+# when any pin has drifted behind its upstream branch head. See issue #58.
+
+on:
+  schedule:
+    # Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: action-pin-monitor
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout
+        # Sparse checkout: workflow files to scan, the issue body template,
+        # and the install script.
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          sparse-checkout: |
+            .github/workflows
+            docs/action-pin-issue.md
+            scripts/install-ci-tools.sh
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Install ci-tools
+        run: |
+          ./scripts/install-ci-tools.sh
+          validate-action-pins --version
+
+      - name: Scan branch-pinned actions for drift
+        id: scan
+        env:
+          # Auth lifts validate-action-pins from 60 req/hr (unauth) to 5000 req/hr.
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # TSV columns: file, action, ref, head-sha, kind.
+          # head-sha is empty when up-to-date, short SHA when behind the branch head.
+          stale=$(
+            validate-action-pins updates --format=tsv --only branch \
+              .github/workflows/*.yml \
+              | awk -F'\t' 'NF == 5 && $5 == "branch" && $4 != ""'
+          )
+          if [ -z "${stale}" ]
+          then
+            echo "No stale branch pins."
+            exit 0
+          fi
+          echo "Stale pins detected:"
+          echo "${stale}"
+          {
+            echo "stale<<STALE_EOF"
+            echo "${stale}"
+            echo "STALE_EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Open issue on drift
+        if: steps.scan.outputs.stale != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STALE: ${{ steps.scan.outputs.stale }}
+        run: |
+          open_issues=$(
+            gh issue list \
+              --label action-pin-update \
+              --state open \
+              --limit 1 \
+              --json number \
+              --jq 'length'
+          )
+          if [ "${open_issues}" -gt 0 ]; then
+            echo "Open action-pin-update issue already exists — skipping."
+            exit 0
+          fi
+
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          pins_md=$(
+            printf '%s\n' "${STALE}" | awk -F'\t' '{
+              printf "- `%s`: `%s` on `%s` — behind branch head `%s`\n", $1, $2, $3, $4
+            }'
+          )
+
+          awk -v pins="${pins_md}" -v url="${run_url}" '
+            { gsub(/\$STALE_PINS/, pins); gsub(/\$RUN_URL/, url); print }
+          ' docs/action-pin-issue.md > /tmp/issue-body.md
+
+          gh issue create \
+            --title "Action Pin Monitor: stale branch pins detected" \
+            --body-file /tmp/issue-body.md \
+            --label action-pin-update
