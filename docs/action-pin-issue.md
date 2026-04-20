@@ -18,6 +18,6 @@ $STALE_PINS
 3. Update the `uses:` line in the affected workflow file; keep the
    `# <branch>` comment intact.
 4. Open a PR. CI's `make lint-action` validates the new pin via
-   `validate-action-pins check`.
+   `validate-action-pins`.
 
 See [docs/how-to/security.md](docs/how-to/security.md) for the pinning policy.
