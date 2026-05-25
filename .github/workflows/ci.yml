@@ -17,7 +17,7 @@ jobs:
   test-bot:
     strategy:
       matrix:
-        os: [ ubuntu-22.04, macos-15-intel, macos-26 ]
+        os: [ ubuntu-24.04, macos-15-intel, macos-26 ]
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
@@ -44,6 +44,10 @@ jobs:
       - run: brew developer on
 
       - run: brew test-bot --only-cleanup-before
+
+      - name: Install Bubblewrap (Linux sandbox)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y bubblewrap
 
       - run: brew test-bot --only-setup
 
