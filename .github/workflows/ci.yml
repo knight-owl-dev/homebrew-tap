@@ -24,6 +24,11 @@ jobs:
       checks: read
       contents: read
       pull-requests: read
+    env:
+      # Hosted Ubuntu runners restrict unprivileged user namespaces via AppArmor,
+      # so rootless Bubblewrap can't start the Linux sandbox. This tap only
+      # downloads pre-built binaries — no compilation happens to sandbox.
+      HOMEBREW_NO_SANDBOX_LINUX: 1
     steps:
       - name: Configure git defaults
         run: git config --global init.defaultBranch main
@@ -44,10 +49,6 @@ jobs:
       - run: brew developer on
 
       - run: brew test-bot --only-cleanup-before
-
-      - name: Install Bubblewrap (Linux sandbox)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y bubblewrap
 
       - run: brew test-bot --only-setup
 
