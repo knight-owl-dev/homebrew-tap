@@ -43,7 +43,7 @@ jobs:
           repositories: ${{ github.event.repository.name }}
 
       - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@98cfa07b984a61682e6cd3a0833fad2006cc84ba # main
+        uses: Homebrew/actions/setup-homebrew@6eaeff80e7e5c43087c0e5eb5aa82120399e9c91 # main
         with:
           token: ${{ steps.app-token.outputs.token }}
 
