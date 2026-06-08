@@ -29,11 +29,6 @@ jobs:
       # so rootless Bubblewrap can't start the Linux sandbox. This tap only
       # downloads pre-built binaries — no compilation happens to sandbox.
       HOMEBREW_NO_SANDBOX_LINUX: 1
-      # Homebrew's new tap-trust check fails `brew doctor` (run by
-      # test-bot --only-setup) on this local self-tap. Keep the pre-trust
-      # behavior during the transition (becomes the default in Homebrew
-      # 5.2/6.0); the tap under test is our own.
-      HOMEBREW_NO_REQUIRE_TAP_TRUST: 1
     steps:
       - name: Configure git defaults
         run: git config --global init.defaultBranch main
