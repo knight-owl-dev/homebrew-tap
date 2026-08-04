@@ -17,7 +17,8 @@ Create `Manifests/<formula-name>.rb` using the
 **Notes:**
 
 - Module name must be PascalCase version of the formula name plus `Manifest` (e.g., `KeystoneCliManifest`)
-- `TAG_PREFIX` is typically `"v"` for tags like `v1.0.0`, or `""` for tags like `1.0.0`
+- `TAG_PREFIX` must be `"v"` for tags like `v1.0.0`, or `""` for tags like `1.0.0`. Homebrew scans
+  the version from the release tag in the download URL, and only these two forms are recognized
 - `ASSET_TEMPLATE` uses Ruby `format()` syntax with `%<version>s` and `%<platform>s` placeholders
 
 ## Step 2: Create the Formula

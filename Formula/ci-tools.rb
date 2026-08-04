@@ -5,7 +5,6 @@ class CiTools < Formula
 
   desc "CI/CD tools for GitHub Actions workflows"
   homepage "https://github.com/#{REPO}"
-  version VERSION
   license "MIT"
 
   depends_on "curl"
