@@ -15,7 +15,6 @@ class Example < Formula
 
   desc "<description>"
   homepage "https://github.com/#{REPO}"
-  version VERSION
   license "<license>"
 
   on_macos do
