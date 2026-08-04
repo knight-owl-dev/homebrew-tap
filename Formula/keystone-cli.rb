@@ -5,7 +5,6 @@ class KeystoneCli < Formula
 
   desc "Command-line interface for Keystone"
   homepage "https://github.com/#{REPO}"
-  version VERSION
   license "MIT"
 
   on_macos do
