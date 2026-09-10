@@ -24,11 +24,6 @@ jobs:
       checks: read
       contents: read
       pull-requests: read
-    env:
-      # Hosted Ubuntu runners restrict unprivileged user namespaces via AppArmor,
-      # so rootless Bubblewrap can't start the Linux sandbox. This tap only
-      # downloads pre-built binaries — no compilation happens to sandbox.
-      HOMEBREW_NO_SANDBOX_LINUX: 1
     steps:
       - name: Configure git defaults
         run: git config --global init.defaultBranch main
