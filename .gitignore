@@ -24,3 +24,4 @@ vendor/bundle/
 # Local artifacts (intermediate files, test output, etc.)
 /artifacts/
 steps_output.txt
+.scratch/
