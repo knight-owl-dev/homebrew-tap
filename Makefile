@@ -19,7 +19,7 @@ lint-action: ## Check GitHub Actions (actionlint, validate-action-pins)
 	@echo "OK"
 
 lint-md: ## Check Markdown (markdownlint)
-	markdownlint-cli2 "**/*.md"
+	markdownlint-cli2 "**/*.md" "!.scratch"
 	@echo "OK"
 
 lint-fix: lint-brew-fix lint-md-fix ## Fix all auto-fixable issues
@@ -29,5 +29,5 @@ lint-brew-fix: ## Fix Ruby style issues
 	@echo "OK"
 
 lint-md-fix: ## Fix Markdown issues
-	markdownlint-cli2 --fix "**/*.md"
+	markdownlint-cli2 --fix "**/*.md" "!.scratch"
 	@echo "OK"
