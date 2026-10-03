@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  // config:recommended is not extended: its presets address ecosystems this
+  // repo does not have.
+  "extends": ["docker:pinDigests"],
+
+  // Formulas move through update-formula.yml, not here.
+  "enabledManagers": ["github-actions", "custom.regex"],
+
+  "dependencyDashboard": true,
+
+  // Commit subjects here are plain imperative sentences.
+  "semanticCommits": "disabled",
+
+  // Every dependency here lives in a workflow.
+  "labels": ["dependencies", "github-actions"],
+
+  // No `schedule` here: renovate.yml's cron is the single owner of when this
+  // runs. A second window would make a workflow_dispatch outside it look like
+  // a no-op run.
+  "prConcurrentLimit": 5,
+
+  // A weekly run under the default hourly cap leaves every update past the
+  // second for next week; prConcurrentLimit already bounds the CI load.
+  "prHourlyLimit": 0,
+
+  "customManagers": [
+    {
+      // The test-bot matrix names its runners under `runner:`, and the
+      // github-actions manager reads `runs-on:` alone. The capture groups
+      // mirror what that manager extracts: depName "ubuntu", currentValue
+      // "26.04" or "26.04-arm".
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": ["runner: (?<depName>ubuntu|macos)-(?<currentValue>\\S+)"],
+      "datasourceTemplate": "github-runners",
+      "autoReplaceStringTemplate": "runner: {{depName}}-{{newValue}}"
+    },
+    {
+      // Homebrew/actions tags are four-part (2026.09.21.1); the github-actions
+      // manager reads three and loses the tag.
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "uses: (?<depName>Homebrew/actions)/setup-homebrew@(?<currentDigest>[0-9a-f]{40}) # (?<currentValue>\\d+\\.\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$",
+      "autoReplaceStringTemplate": "uses: {{depName}}/setup-homebrew@{{newDigest}} # {{newValue}}"
+    }
+  ],
+
+  "packageRules": [
+    // Owned by the four-part custom manager above.
+    {
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["Homebrew/actions"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "actions (minor and patch)"
+    }
+  ]
+}

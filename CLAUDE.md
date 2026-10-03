@@ -98,7 +98,8 @@ brew style --fix scripts/
 
 ## CI/CD
 
-- **ci.yml**: Runs linting (actionlint, markdownlint) and `brew test-bot` on PRs and pushes to main
+- **ci.yml**: Runs linting (actionlint, markdownlint) and `brew test-bot` on PRs
+- **renovate.yml**: Weekly Renovate run (config in `.github/renovate.jsonc`); opens PRs for action, runner, and image bumps
 - **update-formula.yml**: Updates formulas to latest versions, creates PR with auto-merge
   - Trigger manually via Actions tab, or via `repository_dispatch` from upstream repos
   - Uses GitHub App token for PR creation (triggers CI workflows)

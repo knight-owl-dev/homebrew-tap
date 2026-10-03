@@ -89,13 +89,14 @@ Only request the minimum permissions needed.
 |--------------------------|--------------------------------------------------------------------------|---------------------------------|
 | ci.yml test-bot          | `actions: read`, `checks: read`, `contents: read`, `pull-requests: read` | Read-only access for CI testing |
 | update-formula.yml       | `contents: read`                                                         | Read repository for building    |
+| renovate.yml             | `contents: read`                                                         | Writes go through the App token |
 
 **Example** (from `.github/workflows/ci.yml`):
 
 ```yaml
 jobs:
   test-bot:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runner }}
     permissions:
       actions: read
       checks: read
@@ -108,8 +109,8 @@ jobs:
 **Rule**: Every `uses:` reference is pinned to a full commit SHA with a semver
 version comment. Tag-only and branch-only references are vulnerable to
 tag-rewriting and force-push attacks; SHA pinning ensures the exact code that
-was audited is what runs. The semver comment lets Dependabot track the current
-version and propose clean minor/patch bumps.
+was audited is what runs. The version comment lets Renovate track the current
+version and propose bumps.
 
 | Reference style   | Use when                                              |
 |-------------------|-------------------------------------------------------|
@@ -122,12 +123,13 @@ version and propose clean minor/patch bumps.
 - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 ```
 
-**Branch-pinned actions**: A few upstream actions publish no tagged releases
-(e.g., `Homebrew/actions/setup-homebrew`). Pin these to a specific commit on
-the default branch. Dependabot cannot auto-bump branch-SHA pins without tags,
-so the [`action-pin-monitor`](../../.github/workflows/action-pin-monitor.yml)
-workflow runs weekly and files a deduped issue when any such pin drifts
-behind its upstream branch head.
+**Branch-pinned actions**: Renovate does not bump these; refresh them by hand.
+None remain today.
+
+**Runners and images**: Runner labels name a version (`ubuntu-26.04`, never
+`ubuntu-latest`), and container images carry a tag and digest. Renovate moves
+both, so CI changes only through a reviewed PR. What it scans is in
+[`.github/renovate.jsonc`](../../.github/renovate.jsonc).
 
 **Enforcement**: `make lint-action` runs `validate-action-pins` (shipped in
 the `ci-tools` image), which resolves each pinned SHA against its claimed ref
