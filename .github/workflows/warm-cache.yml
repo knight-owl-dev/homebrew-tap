@@ -1,0 +1,59 @@
+name: Warm Cache
+
+# Installs Homebrew's bundler gems on main and keeps nothing but the cache.
+#
+# A pull request reads caches from its own ref or main, never a sibling's, and
+# ci.yml runs on pull requests alone. Without a writer on main, every pull
+# request's first run installs the gems from scratch.
+#
+# The runner labels and cache key must match ci.yml's test-bot job, or this
+# warms a cache nothing reads.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Never cancel a run in flight: actions/cache saves only once the job finishes.
+concurrency:
+  group: warm-cache
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  warm:
+    name: Warm Cache (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      # One runner failing must not leave the others cold.
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-26.04
+          - runner: ubuntu-26.04-arm
+          - runner: macos-26
+
+    steps:
+      - name: Configure git defaults
+        run: git config --global init.defaultBranch main
+
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478 # 2026.09.28.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Homebrew Bundler RubyGems
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
+          key: ${{ matrix.runner }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ matrix.runner }}-rubygems-
+
+      - run: brew developer on
+
+      - run: brew test-bot --only-setup
