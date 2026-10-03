@@ -56,4 +56,8 @@ jobs:
 
       - run: brew developer on
 
+      # --only-setup runs brew doctor, which fails on the runner image's own
+      # leftovers until this clears them.
+      - run: brew test-bot --only-cleanup-before
+
       - run: brew test-bot --only-setup
