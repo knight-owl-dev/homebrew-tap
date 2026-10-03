@@ -100,6 +100,7 @@ brew style --fix scripts/
 
 - **ci.yml**: Runs linting (actionlint, markdownlint) and `brew test-bot` on PRs
 - **renovate.yml**: Weekly Renovate run (config in `.github/renovate.jsonc`); opens PRs for action, runner, and image bumps
+- **warm-cache.yml**: Saves the test-bot gems cache on main, the only cache scope every PR can read
 - **update-formula.yml**: Updates formulas to latest versions, creates PR with auto-merge
   - Trigger manually via Actions tab, or via `repository_dispatch` from upstream repos
   - Uses GitHub App token for PR creation (triggers CI workflows)
