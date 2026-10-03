@@ -1,24 +1,30 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
-    container: ghcr.io/knight-owl-dev/ci-tools:latest
+    runs-on: ubuntu-26.04-arm
+    container: ghcr.io/knight-owl-dev/ci-tools:v1.6.1@sha256:822d75b014b3de9859297439df2d31b3a761a293db5d0b1874cd18c77f03068f
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: make lint SKIP=lint-brew
 
   test-bot:
+    # Named by platform, not runner label: the main ruleset requires these
+    # checks, and a runner bump would otherwise rename one out from under it.
+    name: test-bot (${{ matrix.platform }})
     strategy:
       matrix:
-        os: [ ubuntu-24.04, ubuntu-24.04-arm, macos-26 ]
-    runs-on: ${{ matrix.os }}
+        include:
+          - platform: linux-x64
+            runner: ubuntu-26.04
+          - platform: linux-arm64
+            runner: ubuntu-26.04-arm
+          - platform: macos-arm64
+            runner: macos-26
+    runs-on: ${{ matrix.runner }}
     permissions:
       actions: read
       checks: read
@@ -30,7 +36,7 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@848c272c7bfe984a197bd4d16383f4c106ec61e6 # main
+        uses: Homebrew/actions/setup-homebrew@848c272c7bfe984a197bd4d16383f4c106ec61e6 # 2026.09.21.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -38,8 +44,8 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ matrix.os }}-rubygems-
+          key: ${{ matrix.runner }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
+          restore-keys: ${{ matrix.runner }}-rubygems-
 
       - run: brew developer on
 
@@ -49,11 +55,10 @@ jobs:
 
       - run: brew test-bot --only-tap-syntax
       - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request'
 
       - name: Upload bottles as artifact
-        if: always() && github.event_name == 'pull_request'
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: bottles_${{ matrix.os }}
+          name: bottles_${{ matrix.platform }}
           path: '*.bottle.*'
